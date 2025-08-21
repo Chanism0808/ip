@@ -35,13 +35,23 @@ public class Dupe {
 
             } else if (input.startsWith("deadline")) {
                 String[] arguments = input.split(" ",2);
-                String[] parts = arguments[1].split("by ", 2);
+                String[] parts = arguments[1].split("/by ", 2);
                 String description = parts[0];
                 String deadline = parts[1];
                 Deadlines task  = new Deadlines(description, deadline);
                 taskArrayList.add(task);
                 taskOutputMsg(task);
 
+            } else if (input.startsWith("event")) {
+                String[] arguments = input.split(" ",2);
+                String[] parts = arguments[1].split("/from ", 2);
+                String[] dateTime = parts[1].split(" /to ", 2);
+                String description = parts[0];
+                String from = dateTime[0];
+                String to = dateTime[1];
+                Events task = new Events(description, from, to);
+                taskArrayList.add(task);
+                taskOutputMsg(task);
             }
             else {
                 System.out.println("____________________\n"
