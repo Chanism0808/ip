@@ -31,11 +31,17 @@ public class Dupe {
                 String[] parts = input.split(" ",2);
                 ToDos task = new ToDos(parts[1]);
                 taskArrayList.add(task);
-                System.out.println("____________________\n"
-                        + "Got it. I've added this task:\n"
-                        + task.toString()
-                        + "\nNow you have " + taskArrayList.size() + " tasks in the list."
-                        + "\n____________________");
+                taskOutputMsg(task);
+
+            } else if (input.startsWith("deadline")) {
+                String[] arguments = input.split(" ",2);
+                String[] parts = arguments[1].split("by ", 2);
+                String description = parts[0];
+                String deadline = parts[1];
+                Deadlines task  = new Deadlines(description, deadline);
+                taskArrayList.add(task);
+                taskOutputMsg(task);
+
             }
             else {
                 System.out.println("____________________\n"
@@ -43,6 +49,14 @@ public class Dupe {
                         + "\n____________________");
             }
         }
+    }
+
+    public static void taskOutputMsg(Task task) {
+        System.out.println("____________________\n"
+                + "Got it. I've added this task:\n"
+                + task.toString()
+                + "\nNow you have " + taskArrayList.size() + " tasks in the list."
+                + "\n____________________");
     }
 
     public static void query() {
