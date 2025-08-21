@@ -17,33 +17,33 @@ public class Dupe {
             String command = parts[0];
             String argument = parts.length > 1 ? parts[1] : "";
 
-            if (input.equals("bye")) {
+            if (command.equals("bye")) {
                 exit();
                 break;
 
-            } else if (input.equals("list")) {
+            } else if (command.equals("list")) {
                 listTasks();
 
-            } else if (input.startsWith("mark")) {
+            } else if (command.equals("mark")) {
                 if (!isArgumentEmpty(argument)) { //if it is not empty the whole statement is true
                     int taskID = Integer.parseInt(parts[1]);
                     mark(taskID);
                 }
 
-            } else if (input.startsWith("unmark")) {
+            } else if (command.equals("unmark")) {
                 if (!isArgumentEmpty(argument)) {
                     int taskID = Integer.parseInt(parts[1]);
                     unmark(taskID);
                 }
 
-            } else if (input.startsWith("todo")) {
+            } else if (command.equals("todo")) {
                 if (!isArgumentEmptyTask(argument)) {
                     ToDos task = new ToDos(parts[1]);
                     taskArrayList.add(task);
                     taskOutputMsg(task);
                 }
 
-            } else if (input.startsWith("deadline")) {
+            } else if (command.equals("deadline")) {
                 //String[] arguments = input.split(" ",2);
                 if (!isArgumentEmptyTask(argument)) {
                     String[] subparts = argument.split("/by ", 2);
@@ -59,7 +59,7 @@ public class Dupe {
 
                 }
 
-            } else if (input.startsWith("event")) {
+            } else if (command.equals("event")) {
                 if (!isArgumentEmptyTask(argument)) {
                     String[] subparts = argument.split("/from ", 2);
                     String description = subparts[0];
@@ -77,6 +77,10 @@ public class Dupe {
                     } else{
                         System.out.println("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     }
+                }
+            } else if (command.equals("delete")) {
+                if (!isArgumentEmpty(argument)) {
+                    deleteTask(Integer.parseInt(argument));
                 }
             }
             else {
@@ -106,7 +110,7 @@ public class Dupe {
     public static void taskOutputMsg(Task task) {
         System.out.println("____________________\n"
                 + "Got it. I've added this task:\n"
-                + task.toString()
+                + task
                 + "\nNow you have " + taskArrayList.size() + " tasks in the list."
                 + "\n____________________");
     }
@@ -135,13 +139,22 @@ public class Dupe {
         System.out.println("Nice! I've marked this task as done:");
         Task selectedTask = taskArrayList.get(option-1);
         selectedTask.markAsDone();
-        System.out.println(selectedTask+"\n____________________");
+        System.out.println(selectedTask + "\n____________________");
     }
 
     public static void unmark(int option) {
         System.out.println("OK, I've marked this task as not done yet:");
         Task selectedTask = taskArrayList.get(option-1);
         selectedTask.markAsNotDone();
-        System.out.println(selectedTask+"\n____________________");
+        System.out.println(selectedTask + "\n____________________");
+    }
+
+    public static void deleteTask(int option) {
+        Task selectedTask = taskArrayList.get(option-1);
+        taskArrayList.remove(option-1);
+        System.out.println("____________________\n"
+                + selectedTask.toString()
+                + "\nNow you have " + taskArrayList.size() + " tasks in the list."
+                + "\n____________________");
     }
 }
