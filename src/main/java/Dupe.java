@@ -6,12 +6,11 @@ public class Dupe {
 
     public static void main(String[] args) {
         //initialising Task
-        initialiseTask();
+        //initialiseTask();
         String greetings = "____________________\n"
                 + "Hello! I'm Dupe";
         System.out.println(greetings);
         query();
-
 
         while (true) {
             Scanner sc = new Scanner(System.in);
@@ -23,24 +22,29 @@ public class Dupe {
             } else if (input.equals("list")) {
                 listTasks();
             } else if (input.startsWith("mark")) {
-                String[] parts = input.split(" ");
-                if(parts.length > 1) {
-                    int taskID = Integer.parseInt(parts[1]);
-                    mark(taskID);
-                }
+                String[] parts = input.split(" ",2);
+                int taskID = Integer.parseInt(parts[1]);
+                mark(taskID);
             } else if (input.startsWith("unmark")) {
-                String[] parts = input.split(" ");
-                if(parts.length > 1) {
-                    int taskID = Integer.parseInt(parts[1]);
-                    unmark(taskID);
-                }
-            } else {
+                String[] parts = input.split(" ",2);
+                int taskID = Integer.parseInt(parts[1]);
+                unmark(taskID);
+            } else if (input.startsWith("todo")) {
+                String[] parts = input.split(" ",2);
+                ToDos task = new ToDos(parts[1]);
+                taskArrayList.add(task);
+                System.out.println("____________________\n"
+                        + "Got it. I've added this task:\n"
+                        + task.toString()
+                        + "\nNow you have " + taskArrayList.size() + " tasks in the list."
+                        + "\n____________________");
+            }
+            else {
                 System.out.println("____________________\n"
                         + input
                         + "\n____________________");
             }
         }
-
     }
 
     public static void query() {
