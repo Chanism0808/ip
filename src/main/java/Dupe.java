@@ -10,8 +10,8 @@ public class Dupe {
         System.out.println(greetings);
         query();
 
-        while (true) {
-            Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextLine()) {
             String input = sc.nextLine();
 
             if (input.equals("bye")) {
