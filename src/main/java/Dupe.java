@@ -13,45 +13,71 @@ public class Dupe {
         Scanner sc = new Scanner(System.in);
         while (sc.hasNextLine()) {
             String input = sc.nextLine();
+            String[] parts = input.split(" ", 2); // split into at most 2 parts
+            String command = parts[0];
+            String argument = parts.length > 1 ? parts[1] : "";
 
             if (input.equals("bye")) {
                 exit();
                 break;
+
             } else if (input.equals("list")) {
                 listTasks();
+
             } else if (input.startsWith("mark")) {
-                String[] parts = input.split(" ",2);
-                int taskID = Integer.parseInt(parts[1]);
-                mark(taskID);
+                if (!isArgumentEmpty(argument)) { //if it is not empty the whole statement is true
+                    int taskID = Integer.parseInt(parts[1]);
+                    mark(taskID);
+                }
+
             } else if (input.startsWith("unmark")) {
-                String[] parts = input.split(" ",2);
-                int taskID = Integer.parseInt(parts[1]);
-                unmark(taskID);
+                if (!isArgumentEmpty(argument)) {
+                    int taskID = Integer.parseInt(parts[1]);
+                    unmark(taskID);
+                }
+
             } else if (input.startsWith("todo")) {
-                String[] parts = input.split(" ",2);
-                ToDos task = new ToDos(parts[1]);
-                taskArrayList.add(task);
-                taskOutputMsg(task);
+                if (!isArgumentEmptyTask(argument)) {
+                    ToDos task = new ToDos(parts[1]);
+                    taskArrayList.add(task);
+                    taskOutputMsg(task);
+                }
 
             } else if (input.startsWith("deadline")) {
-                String[] arguments = input.split(" ",2);
-                String[] parts = arguments[1].split("/by ", 2);
-                String description = parts[0];
-                String deadline = parts[1];
-                Deadlines task  = new Deadlines(description, deadline);
-                taskArrayList.add(task);
-                taskOutputMsg(task);
+                //String[] arguments = input.split(" ",2);
+                if (!isArgumentEmptyTask(argument)) {
+                    String[] subparts = argument.split("/by ", 2);
+                    String description = subparts[0];
+                    String deadline = subparts.length > 1 ? subparts[1] : "";
+                    if (!deadline.isEmpty()) {
+                        Deadlines task  = new Deadlines(description, deadline);
+                        taskArrayList.add(task);
+                        taskOutputMsg(task);
+                    } else {
+                        System.out.println("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
+                    }
+
+                }
 
             } else if (input.startsWith("event")) {
-                String[] arguments = input.split(" ",2);
-                String[] parts = arguments[1].split("/from ", 2);
-                String[] dateTime = parts[1].split(" /to ", 2);
-                String description = parts[0];
-                String from = dateTime[0];
-                String to = dateTime[1];
-                Events task = new Events(description, from, to);
-                taskArrayList.add(task);
-                taskOutputMsg(task);
+                if (!isArgumentEmptyTask(argument)) {
+                    String[] subparts = argument.split("/from ", 2);
+                    String description = subparts[0];
+                    String dateTime = subparts.length > 1 ? subparts[1] : "";
+                    if (!dateTime.isEmpty()) {
+                        String[] subdateTime = dateTime.split(" /to ", 2);
+                        String from = subdateTime[0];
+                        String to = subdateTime.length > 1 ? subdateTime[1] : "";
+                        if (!to.isEmpty()) {
+                            Events task = new Events(description, from, to);
+                            taskArrayList.add(task);
+                            taskOutputMsg(task);
+                        }
+                        System.out.println("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
+                    } else{
+                        System.out.println("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
+                    }
+                }
             }
             else {
                 System.out.println("____________________\n"
@@ -59,6 +85,22 @@ public class Dupe {
                         + "\n____________________");
             }
         }
+    }
+
+    public static boolean isArgumentEmpty(String input) {
+        if (input.isEmpty()) {
+            System.out.println("Please enter a task number.");
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isArgumentEmptyTask(String input) {
+        if (input.isEmpty()) {
+            System.out.println("Please enter description.");
+            return true;
+        }
+        return false;
     }
 
     public static void taskOutputMsg(Task task) {
