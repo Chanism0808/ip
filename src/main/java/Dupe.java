@@ -81,8 +81,8 @@ public class Dupe {
             }
             else {
                 System.out.println("____________________\n"
-                        + input
-                        + "\n____________________");
+                        + "Invalid Command\n"
+                        + "____________________");
             }
         }
     }
