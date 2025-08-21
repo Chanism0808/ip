@@ -5,8 +5,6 @@ public class Dupe {
     static ArrayList<Task>  taskArrayList = new ArrayList<>();
 
     public static void main(String[] args) {
-        //initialising Task
-        //initialiseTask();
         String greetings = "____________________\n"
                 + "Hello! I'm Dupe";
         System.out.println(greetings);
@@ -56,17 +54,6 @@ public class Dupe {
         System.out.println("____________________\n"
                         + "Goodbye! Hope to see you again soon!\n"
                         + "____________________");
-    }
-
-    public static void initialiseTask() {
-
-        Task t1 = new Task("read book");
-        Task t2 = new Task("return book");
-        Task t3 = new Task("buy book");
-        taskArrayList.add(t1);
-        taskArrayList.add(t2);
-        taskArrayList.add(t3);
-        t1.markAsDone();
     }
 
     public static void listTasks() {
