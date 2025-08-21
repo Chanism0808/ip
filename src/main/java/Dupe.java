@@ -22,6 +22,18 @@ public class Dupe {
                 break;
             } else if (input.equals("list")) {
                 listTasks();
+            } else if (input.startsWith("mark")) {
+                String[] parts = input.split(" ");
+                if(parts.length > 1) {
+                    int taskID = Integer.parseInt(parts[1]);
+                    mark(taskID);
+                }
+            } else if (input.startsWith("unmark")) {
+                String[] parts = input.split(" ");
+                if(parts.length > 1) {
+                    int taskID = Integer.parseInt(parts[1]);
+                    unmark(taskID);
+                }
             } else {
                 System.out.println("____________________\n"
                         + input
@@ -60,5 +72,19 @@ public class Dupe {
             System.out.println(i+1 + "." + taskArrayList.get(i));
         }
         System.out.println("____________________\n");
+    }
+
+    public static void mark(int option) {
+        System.out.println("Nice! I've marked this task as done:");
+        Task selectedTask = taskArrayList.get(option-1);
+        selectedTask.markAsDone();
+        System.out.println(selectedTask+"\n____________________");
+    }
+
+    public static void unmark(int option) {
+        System.out.println("OK, I've marked this task as not done yet:");
+        Task selectedTask = taskArrayList.get(option-1);
+        selectedTask.markAsNotDone();
+        System.out.println(selectedTask+"\n____________________");
     }
 }
