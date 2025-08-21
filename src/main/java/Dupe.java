@@ -2,27 +2,33 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Dupe {
+    static ArrayList<Task>  taskArrayList = new ArrayList<>();
+
     public static void main(String[] args) {
         //initialising Task
         initialiseTask();
-
         String greetings = "____________________\n"
                 + "Hello! I'm Dupe";
         System.out.println(greetings);
         query();
-        while (true){
+
+
+        while (true) {
             Scanner sc = new Scanner(System.in);
             String input = sc.nextLine();
-            if(!input.equals("bye")){
-                System.out.println("____________________\n"
-                                    + input
-                                    + "\n____________________");
-            }
-            else{
+
+            if (input.equals("bye")) {
                 exit();
                 break;
+            } else if (input.equals("list")) {
+                listTasks();
+            } else {
+                System.out.println("____________________\n"
+                        + input
+                        + "\n____________________");
             }
         }
+
     }
 
     public static void query() {
@@ -37,12 +43,22 @@ public class Dupe {
     }
 
     public static void initialiseTask() {
-        ArrayList<Task>  taskArrayList = new ArrayList<>();
+
         Task t1 = new Task("read book");
         Task t2 = new Task("return book");
         Task t3 = new Task("buy book");
         taskArrayList.add(t1);
         taskArrayList.add(t2);
         taskArrayList.add(t3);
+        t1.markAsDone();
+    }
+
+    public static void listTasks() {
+        System.out.println("____________________\n"
+                        +"Here are the list of tasks:\n");
+        for (int i = 0; i < taskArrayList.size(); i++) {
+            System.out.println(i+1 + "." + taskArrayList.get(i));
+        }
+        System.out.println("____________________\n");
     }
 }
