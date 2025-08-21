@@ -27,13 +27,17 @@ public class Dupe {
             } else if (command.equals("mark")) {
                 if (!isArgumentEmpty(argument)) { //if it is not empty the whole statement is true
                     int taskID = Integer.parseInt(parts[1]);
-                    mark(taskID);
+                    if (isInRange(taskID)) {
+                        mark(taskID);
+                    }
                 }
 
             } else if (command.equals("unmark")) {
                 if (!isArgumentEmpty(argument)) {
                     int taskID = Integer.parseInt(parts[1]);
-                    unmark(taskID);
+                    if (isInRange(taskID)) {
+                        unmark(taskID);
+                    }
                 }
 
             } else if (command.equals("todo")) {
@@ -80,7 +84,10 @@ public class Dupe {
                 }
             } else if (command.equals("delete")) {
                 if (!isArgumentEmpty(argument)) {
-                    deleteTask(Integer.parseInt(argument));
+                    int taskID = Integer.parseInt(argument);
+                    if (isInRange(taskID)) {
+                        deleteTask(taskID);
+                    }
                 }
             }
             else {
@@ -89,6 +96,14 @@ public class Dupe {
                         + "____________________");
             }
         }
+    }
+
+    public static  boolean isInRange(int taskID){
+        if (taskID <= 0 || taskID > taskArrayList.size()) {
+            System.out.println("Please enter a valid task ID");
+            return false;
+        }
+        return true;
     }
 
     public static boolean isArgumentEmpty(String input) {
