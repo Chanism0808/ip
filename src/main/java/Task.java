@@ -22,7 +22,15 @@ public class Task {
     public String toString() {
         if(isDone){
             return "[X] " + description;
-        };
+        }
         return "[ ] " + description;
     }
+
+    public String savedListFormat() {
+        if(isDone){
+            return "1 | " + description;
+        }
+        return "0 | " + description;
+    }
+
 }

@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Dupe {
     static ArrayList<Task>  taskArrayList = new ArrayList<>();
@@ -9,6 +12,7 @@ public class Dupe {
                 + "Hello! I'm Dupe";
         System.out.println(greetings);
         query();
+        loadList();
 
         Scanner sc = new Scanner(System.in);
         while (sc.hasNextLine()) {
@@ -31,6 +35,7 @@ public class Dupe {
                         mark(taskID);
                     }
                 }
+                saveList();
 
             } else if (command.equals("unmark")) {
                 if (!isArgumentEmpty(argument)) {
@@ -39,6 +44,7 @@ public class Dupe {
                         unmark(taskID);
                     }
                 }
+                saveList();
 
             } else if (command.equals("todo")) {
                 if (!isArgumentEmptyTask(argument)) {
@@ -46,6 +52,7 @@ public class Dupe {
                     taskArrayList.add(task);
                     taskOutputMsg(task);
                 }
+                saveList();
 
             } else if (command.equals("deadline")) {
                 //String[] arguments = input.split(" ",2);
@@ -60,8 +67,8 @@ public class Dupe {
                     } else {
                         System.out.println("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
                     }
-
                 }
+                saveList();
 
             } else if (command.equals("event")) {
                 if (!isArgumentEmptyTask(argument)) {
@@ -82,6 +89,8 @@ public class Dupe {
                         System.out.println("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     }
                 }
+                saveList();
+
             } else if (command.equals("delete")) {
                 if (!isArgumentEmpty(argument)) {
                     int taskID = Integer.parseInt(argument);
@@ -89,6 +98,7 @@ public class Dupe {
                         deleteTask(taskID);
                     }
                 }
+                saveList();
             }
             else {
                 System.out.println("____________________\n"
@@ -98,7 +108,83 @@ public class Dupe {
         }
     }
 
-    public static  boolean isInRange(int taskID){
+
+    public static void saveList() {
+        String filePath = "./data/tasks.txt";
+        File file = new File(filePath);
+
+        try {
+            // If file doesn't exist, create it
+            if (!file.exists()) {
+                file.getParentFile().mkdirs(); // create "data" folder if not exist
+                file.createNewFile();
+                System.out.println("File not found. Created new file at: " + filePath);
+                return;
+            }
+            FileWriter fw = new FileWriter("data/tasks.txt"); // 'true' = append mode
+            for (Task task : taskArrayList) {
+                fw.write(task.savedListFormat() + "\n");
+            }
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving tasks: " + e.getMessage());
+        }
+    }
+
+    public static void loadList() {
+        String filePath = "./data/tasks.txt"; // relative path
+        File file = new File(filePath);
+
+        try {
+            // If file doesn't exist, create it
+            if (!file.exists()) {
+                file.getParentFile().mkdirs(); // create "data" folder if not exist
+                file.createNewFile();
+                System.out.println("File not found. Created new file at: " + filePath);
+                return;
+            }
+            // Read from the file and load tasks
+            Scanner fileScanner = new Scanner(file);
+
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                String[] parts = line.split(" \\| ");
+                String type = parts[0];
+
+                if (type.equals("T")) {
+                    ToDos task = new ToDos(parts[2]);
+                    if (parts[1].equals("1")) {
+                        task.markAsDone();
+                    }
+                    taskArrayList.add(task);
+                }
+                else if (type.equals("D")) {
+                    Deadlines task = new Deadlines(parts[2], parts[3]);
+                    if (parts[1].equals("1")) {
+                        task.markAsDone();
+                    }
+                    taskArrayList.add(task);
+                }
+                else if (type.equals("E")) {
+                    Events task = new Events(parts[2], parts[3], parts[4]);
+                    if (parts[1].equals("1")) {
+                        task.markAsDone();
+                    }
+                    taskArrayList.add(task);
+                }
+            }
+            fileScanner.close();
+            System.out.println("____________________\n"
+                    + "Loaded " + taskArrayList.size() + " tasks from file."
+                    + "\n____________________");
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while loading tasks: " + e.getMessage());
+        }
+
+    }
+
+    public static boolean isInRange(int taskID){
         if (taskID <= 0 || taskID > taskArrayList.size()) {
             System.out.println("Please enter a valid task ID");
             return false;
