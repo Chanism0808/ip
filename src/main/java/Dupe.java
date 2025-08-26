@@ -1,3 +1,4 @@
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
@@ -64,11 +65,15 @@ public class Dupe {
                     String description = subparts[0];
                     String deadline = subparts.length > 1 ? subparts[1] : "";
                     if (!deadline.isEmpty()) {
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                        LocalDateTime dateTime = LocalDateTime.parse(deadline, formatter);
-                        Deadlines task  = new Deadlines(description, dateTime);
-                        taskArrayList.add(task);
-                        taskOutputMsg(task);
+                        try {
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                            LocalDateTime dateTime = LocalDateTime.parse(deadline, formatter);
+                            Deadlines task  = new Deadlines(description, dateTime);
+                            taskArrayList.add(task);
+                            taskOutputMsg(task);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Invalid date format. Please use dd-MM-yyyy HH:mm");
+                        }
                     } else {
                         System.out.println("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
                     }
@@ -85,12 +90,16 @@ public class Dupe {
                         String from = subdateTime[0];
                         String to = subdateTime.length > 1 ? subdateTime[1] : "";
                         if (!to.isEmpty()) {
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                            LocalDateTime dateTimeFrom = LocalDateTime.parse(from, formatter);
-                            LocalDateTime dateTimeTo = LocalDateTime.parse(to, formatter);
-                            Events task = new Events(description, dateTimeFrom, dateTimeTo);
-                            taskArrayList.add(task);
-                            taskOutputMsg(task);
+                            try {
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                                LocalDateTime dateTimeFrom = LocalDateTime.parse(from, formatter);
+                                LocalDateTime dateTimeTo = LocalDateTime.parse(to, formatter);
+                                Events task = new Events(description, dateTimeFrom, dateTimeTo);
+                                taskArrayList.add(task);
+                                taskOutputMsg(task);
+                            } catch (DateTimeParseException e) {
+                                System.out.println("Invalid date format. Please use dd-MM-yyyy HH:mm");
+                            }
                         }
                         System.out.println("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     } else{
