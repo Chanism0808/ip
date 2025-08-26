@@ -33,7 +33,7 @@ public class Ui {
         for (int i = 0; i < tasks.size(); i++) {
             System.out.println((i + 1) + "." + tasks.get(i));
         }
-        System.out.println("____________________\n");
+        System.out.println("____________________");
     }
 
     // Print task marked as done
@@ -54,7 +54,6 @@ public class Ui {
 
     public void showListLoaded(ArrayList<Task> tasks) {
         System.out.println("____________________\n"
-                + "Loaded " + tasks.size() + " tasks from file."
-                + "\n____________________");
+                + "Loaded " + tasks.size() + " tasks from file.");
     }
 }

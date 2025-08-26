@@ -8,14 +8,26 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Dupe {
-    static ArrayList<Task>  taskArrayList = new ArrayList<>();
-    static Ui ui = new Ui();
-    //static TaskList taskList = new TaskList(ui, taskArrayList);
+    private Storage storage;
+    private TaskList tasks;
+    private Ui ui;
 
-    public static void main(String[] args) {
+    public Dupe(String filePath) {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        try {
+            tasks = new TaskList(storage.load());
+            ui.showListLoaded(tasks.getTasks());
+        } catch (IOException e) {
+            ui.showError("Error loading file");
+            tasks = new TaskList();
+        }
+    }
+
+    public void run() {
         ui.showGreeting();
-        loadList();
-        TaskList taskList =  new TaskList(ui, taskArrayList);
+//        loadList();
+//        TaskList taskList =  new TaskList(taskArrayList);
 
         Scanner sc = new Scanner(System.in);
         while (sc.hasNextLine()) {
@@ -34,41 +46,49 @@ public class Dupe {
                 break;
 
             } else if (command.equals("list")) {
-                if (taskList.isEmpty()) {
+                if (tasks.isEmpty()) {
                     ui.showError("You have no tasks in your list.");
                 } else {
-                    ui.showTaskList(taskList.getTasks());
+                    ui.showTaskList(tasks.getTasks());
                 }
 
             } else if (command.equals("mark")) {
                 if (argument.isEmpty()) {
                     ui.showError("Please enter a task number.");
                 } else {
-                    int taskID = Parser.parseInt(argument);
-                    Task selectedTask =  taskList.markTaskDone(taskID);
-                    ui.showTaskMarked(selectedTask);
+                    int taskID = Integer.parseInt(argument);
+                    if (Parser.isValidIndex(taskID, tasks.getTasks())) {
+                        Task selectedTask =  tasks.markTaskDone(taskID);
+                        ui.showTaskMarked(selectedTask);
+                    } else {
+                        ui.showError("Please enter a valid task ID");
+                    }
                 }
-                saveList();
+                storage.save(tasks.getTasks(), ui);
 
             } else if (command.equals("unmark")) {
                 if (argument.isEmpty()) {
                     ui.showError("Please enter a task number.");
                 } else {
-                    int taskID = Parser.parseInt(argument);
-                    Task selectedTask =  taskList.markTaskUndone(taskID);
-                    ui.showTaskMarked(selectedTask);
+                    int taskID = Integer.parseInt(argument);
+                    if (Parser.isValidIndex(taskID, tasks.getTasks())) {
+                        Task selectedTask =  tasks.markTaskUndone(taskID);
+                        ui.showTaskUnmarked(selectedTask);
+                    } else {
+                        ui.showError("Please enter a valid task ID");
+                    }
                 }
-                saveList();
+                storage.save(tasks.getTasks(), ui);
 
             } else if (command.equals("todo")) {
                 if (argument.isEmpty()) {
                     ui.showError("Please enter description.");
                 } else {
                     ToDos task = new ToDos(argument);
-                    taskList.addTask(task);
-                    ui.showTaskAdded(task, taskList.size());
+                    tasks.addTask(task);
+                    ui.showTaskAdded(task, tasks.size());
                 }
-                saveList();
+                storage.save(tasks.getTasks(), ui);
 
             } else if (command.equals("deadline")) {
                 if (argument.isEmpty()) {
@@ -81,8 +101,8 @@ public class Dupe {
                         try {
                             LocalDateTime dateTime = Parser.parseDateTime(deadline);
                             Deadlines task  = new Deadlines(description, dateTime);
-                            taskList.addTask(task);
-                            ui.showTaskAdded(task,taskList.size()); //HERE
+                            tasks.addTask(task);
+                            ui.showTaskAdded(task,tasks.size()); //HERE
                         } catch (DateTimeParseException e) {
                             ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                         }
@@ -90,7 +110,7 @@ public class Dupe {
                         ui.showError("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
                     }
                 }
-                saveList();
+                storage.save(tasks.getTasks(), ui);
 
             } else if (command.equals("event")) {
                 if  (argument.isEmpty()) {
@@ -108,8 +128,8 @@ public class Dupe {
                                 LocalDateTime dateTimeFrom = Parser.parseDateTime(from);
                                 LocalDateTime dateTimeTo = Parser.parseDateTime(to);
                                 Events task = new Events(description, dateTimeFrom, dateTimeTo);
-                                taskList.addTask(task);
-                                ui.showTaskAdded(task, taskList.size()); //HERE
+                                tasks.addTask(task);
+                                ui.showTaskAdded(task, tasks.size());
                             } catch (DateTimeParseException e) {
                                 ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                             }
@@ -118,21 +138,22 @@ public class Dupe {
                         ui.showError("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     }
                 }
-                saveList();
+                storage.save(tasks.getTasks(), ui);
 
             } else if (command.equals("delete")) {
                 if (argument.isEmpty()) {
                     ui.showError("Please enter a task number.");
                 } else {
                     int taskID = Integer.parseInt(argument);
-                    if (Parser.isValidIndex(taskID, taskList.getTasks())) { //HERE
-                        Task deleteTask = taskList.deleteTask(taskID);
-                        ui.showTaskDeleted(deleteTask, taskList.size());
+                    if (Parser.isValidIndex(taskID, tasks.getTasks())) {
+                        Task deleteTask = tasks.deleteTask(taskID);
+                        ui.showTaskDeleted(deleteTask, tasks.size());
                     } else {
                         ui.showError("Please enter a valid task ID");
                     }
                 }
-                saveList();
+                storage.save(tasks.getTasks(), ui);
+
             }
             else {
                 ui.showError("\n____________________\n"
@@ -142,81 +163,85 @@ public class Dupe {
         }
     }
 
-
-    public static void saveList() {
-        String filePath = "./data/tasks.txt";
-        File file = new File(filePath);
-
-        try {
-            // If file doesn't exist, create it
-            if (!file.exists()) {
-                file.getParentFile().mkdirs(); // create "data" folder if not exist
-                file.createNewFile();
-                ui.showError("File not found. Created new file at: " + filePath);
-                return;
-            }
-            FileWriter fw = new FileWriter("data/tasks.txt"); // 'true' = append mode
-            for (Task task : taskArrayList) {
-                fw.write(task.savedListFormat() + "\n");
-            }
-            fw.close();
-        } catch (IOException e) {
-            ui.showError("An error occurred while saving tasks: " + e.getMessage());
-        }
+    public static void main(String[] args) {
+        new Dupe("data/tasks.txt").run();
     }
 
-    public static void loadList() {
-        String filePath = "./data/tasks.txt"; // relative path
-        File file = new File(filePath);
 
-        try {
-            // If file doesn't exist, create it
-            if (!file.exists()) {
-                file.getParentFile().mkdirs(); // create "data" folder if not exist
-                file.createNewFile();
-                ui.showError("File not found. Created new file at: " + filePath);
-                return;
-            }
-            // Read from the file and load tasks
-            Scanner fileScanner = new Scanner(file);
-
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                String[] parts = line.split(" \\| ");
-                String type = parts[0];
-
-                if (type.equals("T")) {
-                    ToDos task = new ToDos(parts[2]);
-                    if (parts[1].equals("1")) {
-                        task.markAsDone();
-                    }
-                    taskArrayList.add(task);
-                }
-                else if (type.equals("D")) {
-                    LocalDateTime dateTime = Parser.parseDateTimeFile(parts[3]);
-                    Deadlines task = new Deadlines(parts[2], dateTime);
-                    if (parts[1].equals("1")) {
-                        task.markAsDone();
-                    }
-                    taskArrayList.add(task);
-                }
-                else if (type.equals("E")) {
-                    LocalDateTime dateTimeFrom = Parser.parseDateTimeFile(parts[3]);
-                    LocalDateTime dateTimeTo = Parser.parseDateTimeFile(parts[4]);
-                    Events task = new Events(parts[2], dateTimeFrom, dateTimeTo);
-                    if (parts[1].equals("1")) {
-                        task.markAsDone();
-                    }
-                    taskArrayList.add(task);
-                }
-            }
-            fileScanner.close();
-            ui.showListLoaded(taskArrayList);
-
-        } catch (IOException e) {
-            ui.showError("An error occurred while loading tasks: " + e.getMessage());
-        }
-
-    }
+//    public static void saveList() {
+//        String filePath = "./data/tasks.txt";
+//        File file = new File(filePath);
+//
+//        try {
+//            // If file doesn't exist, create it
+//            if (!file.exists()) {
+//                file.getParentFile().mkdirs(); // create "data" folder if not exist
+//                file.createNewFile();
+//                ui.showError("File not found. Created new file at: " + filePath);
+//                return;
+//            }
+//            FileWriter fw = new FileWriter("data/tasks.txt"); // 'true' = append mode
+//            for (Task task : taskArrayList) {
+//                fw.write(task.savedListFormat() + "\n");
+//            }
+//            fw.close();
+//        } catch (IOException e) {
+//            ui.showError("An error occurred while saving tasks: " + e.getMessage());
+//        }
+//    }
+//
+//    public static void loadList() {
+//        String filePath = "./data/tasks.txt"; // relative path
+//        File file = new File(filePath);
+//
+//        try {
+//            // If file doesn't exist, create it
+//            if (!file.exists()) {
+//                file.getParentFile().mkdirs(); // create "data" folder if not exist
+//                file.createNewFile();
+//                ui.showError("File not found. Created new file at: " + filePath);
+//                return;
+//            }
+//            // Read from the file and load tasks
+//            Scanner fileScanner = new Scanner(file);
+//
+//            while (fileScanner.hasNextLine()) {
+//                String line = fileScanner.nextLine();
+//                String[] parts = line.split(" \\| ");
+//                String type = parts[0];
+//
+//                if (type.equals("T")) {
+//                    ToDos task = new ToDos(parts[2]);
+//                    if (parts[1].equals("1")) {
+//                        task.markAsDone();
+//                    }
+//                    taskArrayList.add(task);
+//                }
+//                else if (type.equals("D")) {
+//                    LocalDateTime dateTime = Parser.parseDateTimeFile(parts[3]);
+//                    Deadlines task = new Deadlines(parts[2], dateTime);
+//                    if (parts[1].equals("1")) {
+//                        task.markAsDone();
+//                    }
+//                    taskArrayList.add(task);
+//                }
+//                else if (type.equals("E")) {
+//                    LocalDateTime dateTimeFrom = Parser.parseDateTimeFile(parts[3]);
+//                    LocalDateTime dateTimeTo = Parser.parseDateTimeFile(parts[4]);
+//                    Events task = new Events(parts[2], dateTimeFrom, dateTimeTo);
+//                    if (parts[1].equals("1")) {
+//                        task.markAsDone();
+//                    }
+//                    taskArrayList.add(task);
+//                }
+//            }
+//            fileScanner.close();
+//            ui.showListLoaded(taskArrayList);
+//
+//        } catch (IOException e) {
+//            ui.showError("An error occurred while loading tasks: " + e.getMessage());
+//        }
+//
+//    }
 
 }
