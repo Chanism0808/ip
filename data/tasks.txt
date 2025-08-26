@@ -1,8 +1,5 @@
 D | 0 | project meeting | Jan 01 2010 14:20
-T | 1 | join sports club
-D | 0 | bookclub  | Nov 08 2011 12:09
-E | 1 | concert  | Aug 08 2001 10:00 | Aug 10 2001 12:00
-E | 0 | dancing club  | Oct 20 2001 20:11 | Oct 23 2001 10:10
 T | 0 | CS2103 iP
-D | 0 | swimming  | Aug 08 2001 09:00
-E | 0 | Zouk  | Mar 03 2001 06:00 | Mar 10 2001 09:00
+T | 0 | test
+E | 0 | Retreat | Oct 10 2019 10:10 | Oct 12 2019 11:11
+D | 0 | project | Sep 09 2001 09:09

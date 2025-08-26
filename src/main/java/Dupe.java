@@ -4,7 +4,6 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -20,10 +19,15 @@ public class Dupe {
 
         Scanner sc = new Scanner(System.in);
         while (sc.hasNextLine()) {
+//            String input = sc.nextLine();
+//            String[] parts = input.split(" ", 2); // split into at most 2 parts
+//            String command = parts[0];
+//            String argument = parts.length > 1 ? parts[1] : "";
+
             String input = sc.nextLine();
-            String[] parts = input.split(" ", 2); // split into at most 2 parts
-            String command = parts[0];
-            String argument = parts.length > 1 ? parts[1] : "";
+            String[] parsed = Parser.parse(input);
+            String command = parsed[0];
+            String argument = parsed[1];
 
             if (command.equals("bye")) {
                 ui.showExit();
@@ -33,36 +37,42 @@ public class Dupe {
                 taskList.listTasks();
 
             } else if (command.equals("mark")) {
-                if (!isArgumentEmpty(argument)) { //if it is not empty the whole statement is true
-                    int taskID = Integer.parseInt(parts[1]);
+                if (argument.isEmpty()) {
+                    ui.showError("Please enter a task number.");
+                } else {
+                    int taskID = Parser.parseInt(argument);
                     taskList.markTaskDone(taskID);
                 }
                 saveList();
 
             } else if (command.equals("unmark")) {
-                if (!isArgumentEmpty(argument)) {
-                    int taskID = Integer.parseInt(parts[1]);
+                if (argument.isEmpty()) {
+                    ui.showError("Please enter a task number.");
+                } else {
+                    int taskID = Parser.parseInt(argument);
                     taskList.markTaskUndone(taskID);
                 }
                 saveList();
 
             } else if (command.equals("todo")) {
-                if (!isArgumentEmptyTask(argument)) {
-                    ToDos task = new ToDos(parts[1]);
-                    taskList.addTask(task); //addTask() in TaskList.java
+                if (argument.isEmpty()) {
+                    ui.showError("Please enter description.");
+                } else {
+                    ToDos task = new ToDos(argument);
+                    taskList.addTask(task);
                 }
                 saveList();
 
             } else if (command.equals("deadline")) {
-                //String[] arguments = input.split(" ",2);
-                if (!isArgumentEmptyTask(argument)) {
-                    String[] subparts = argument.split("/by ", 2);
+                if (argument.isEmpty()) {
+                    ui.showError("Please enter description.");
+                } else {
+                    String[] subparts = Parser.parseBy(argument);
                     String description = subparts[0];
-                    String deadline = subparts.length > 1 ? subparts[1] : "";
+                    String deadline = subparts[1];
                     if (!deadline.isEmpty()) {
                         try {
-                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                            LocalDateTime dateTime = LocalDateTime.parse(deadline, formatter);
+                            LocalDateTime dateTime = Parser.parseDateTime(deadline);
                             Deadlines task  = new Deadlines(description, dateTime);
                             taskList.addTask(task); //addTask() in TaskList.java
                         } catch (DateTimeParseException e) {
@@ -75,26 +85,26 @@ public class Dupe {
                 saveList();
 
             } else if (command.equals("event")) {
-                if (!isArgumentEmptyTask(argument)) {
-                    String[] subparts = argument.split("/from ", 2);
+                if  (argument.isEmpty()) {
+                    ui.showError("Please enter description.");
+                } else {
+                    String[] subparts = Parser.parseFrom(argument);
                     String description = subparts[0];
-                    String dateTime = subparts.length > 1 ? subparts[1] : "";
+                    String dateTime = subparts[1];
                     if (!dateTime.isEmpty()) {
-                        String[] subdateTime = dateTime.split(" /to ", 2);
-                        String from = subdateTime[0];
-                        String to = subdateTime.length > 1 ? subdateTime[1] : "";
+                        String[] subDateTime = Parser.parseTo(dateTime);
+                        String from = subDateTime[0];
+                        String to = subDateTime[1];
                         if (!to.isEmpty()) {
                             try {
-                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-                                LocalDateTime dateTimeFrom = LocalDateTime.parse(from, formatter);
-                                LocalDateTime dateTimeTo = LocalDateTime.parse(to, formatter);
+                                LocalDateTime dateTimeFrom = Parser.parseDateTime(from);
+                                LocalDateTime dateTimeTo = Parser.parseDateTime(to);
                                 Events task = new Events(description, dateTimeFrom, dateTimeTo);
-                                taskList.addTask(task); //addTask() in TaskList.java
+                                taskList.addTask(task);
                             } catch (DateTimeParseException e) {
                                 ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                             }
                         }
-                        ui.showError("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     } else{
                         ui.showError("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     }
@@ -102,7 +112,9 @@ public class Dupe {
                 saveList();
 
             } else if (command.equals("delete")) {
-                if (!isArgumentEmpty(argument)) {
+                if (argument.isEmpty()) {
+                    ui.showError("Please enter a task number.");
+                } else {
                     int taskID = Integer.parseInt(argument);
                     taskList.deleteTask(taskID);
                 }
@@ -167,8 +179,7 @@ public class Dupe {
                     taskArrayList.add(task);
                 }
                 else if (type.equals("D")) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
-                    LocalDateTime dateTime = LocalDateTime.parse(parts[3], formatter);
+                    LocalDateTime dateTime = Parser.parseDateTimeFile(parts[3]);
                     Deadlines task = new Deadlines(parts[2], dateTime);
                     if (parts[1].equals("1")) {
                         task.markAsDone();
@@ -176,9 +187,8 @@ public class Dupe {
                     taskArrayList.add(task);
                 }
                 else if (type.equals("E")) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
-                    LocalDateTime dateTimeFrom = LocalDateTime.parse(parts[3], formatter);
-                    LocalDateTime dateTimeTo = LocalDateTime.parse(parts[4], formatter);
+                    LocalDateTime dateTimeFrom = Parser.parseDateTimeFile(parts[3]);
+                    LocalDateTime dateTimeTo = Parser.parseDateTimeFile(parts[4]);
                     Events task = new Events(parts[2], dateTimeFrom, dateTimeTo);
                     if (parts[1].equals("1")) {
                         task.markAsDone();
@@ -195,19 +205,4 @@ public class Dupe {
 
     }
 
-    public static boolean isArgumentEmpty(String input) {
-        if (input.isEmpty()) {
-            ui.showError("Please enter a task number.");
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean isArgumentEmptyTask(String input) {
-        if (input.isEmpty()) {
-            ui.showError("Please enter description.");
-            return true;
-        }
-        return false;
-    }
 }

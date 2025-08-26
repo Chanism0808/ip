@@ -45,6 +45,7 @@ public class TaskList {
             Task selectedTask = tasks.get(option-1);
             tasks.remove(selectedTask);
             ui.showTaskDeleted(selectedTask, tasks.size());
+            return;
         }
         ui.showError("Please enter a valid task ID");
         return;
@@ -57,9 +58,4 @@ public class TaskList {
         }
         ui.showTaskList(tasks);
     }
-
-
-
-
-
 }
