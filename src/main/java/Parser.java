@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class Parser {
     public static String[] parse(String input) {
@@ -31,14 +32,16 @@ public class Parser {
         return new String[] { command, argument };
     }
 
-
-
     public static int parseInt(String input) {
         try {
             return Integer.parseInt(input);
         } catch (NumberFormatException e) {
             return -1;
         }
+    }
+
+    public static boolean isValidIndex(int taskId, ArrayList<Task> tasks) {
+        return taskId > 0 && taskId <= tasks.size();
     }
 
     public static LocalDateTime parseDateTime(String deadline) {

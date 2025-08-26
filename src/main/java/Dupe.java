@@ -34,14 +34,19 @@ public class Dupe {
                 break;
 
             } else if (command.equals("list")) {
-                taskList.listTasks();
+                if (taskList.isEmpty()) {
+                    ui.showError("You have no tasks in your list.");
+                } else {
+                    ui.showTaskList(taskList.getTasks());
+                }
 
             } else if (command.equals("mark")) {
                 if (argument.isEmpty()) {
                     ui.showError("Please enter a task number.");
                 } else {
                     int taskID = Parser.parseInt(argument);
-                    taskList.markTaskDone(taskID);
+                    Task selectedTask =  taskList.markTaskDone(taskID);
+                    ui.showTaskMarked(selectedTask);
                 }
                 saveList();
 
@@ -50,7 +55,8 @@ public class Dupe {
                     ui.showError("Please enter a task number.");
                 } else {
                     int taskID = Parser.parseInt(argument);
-                    taskList.markTaskUndone(taskID);
+                    Task selectedTask =  taskList.markTaskUndone(taskID);
+                    ui.showTaskMarked(selectedTask);
                 }
                 saveList();
 
@@ -60,6 +66,7 @@ public class Dupe {
                 } else {
                     ToDos task = new ToDos(argument);
                     taskList.addTask(task);
+                    ui.showTaskAdded(task, taskList.size());
                 }
                 saveList();
 
@@ -74,7 +81,8 @@ public class Dupe {
                         try {
                             LocalDateTime dateTime = Parser.parseDateTime(deadline);
                             Deadlines task  = new Deadlines(description, dateTime);
-                            taskList.addTask(task); //addTask() in TaskList.java
+                            taskList.addTask(task);
+                            ui.showTaskAdded(task,taskList.size()); //HERE
                         } catch (DateTimeParseException e) {
                             ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                         }
@@ -101,6 +109,7 @@ public class Dupe {
                                 LocalDateTime dateTimeTo = Parser.parseDateTime(to);
                                 Events task = new Events(description, dateTimeFrom, dateTimeTo);
                                 taskList.addTask(task);
+                                ui.showTaskAdded(task, taskList.size()); //HERE
                             } catch (DateTimeParseException e) {
                                 ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                             }
@@ -116,7 +125,12 @@ public class Dupe {
                     ui.showError("Please enter a task number.");
                 } else {
                     int taskID = Integer.parseInt(argument);
-                    taskList.deleteTask(taskID);
+                    if (Parser.isValidIndex(taskID, taskList.getTasks())) { //HERE
+                        Task deleteTask = taskList.deleteTask(taskID);
+                        ui.showTaskDeleted(deleteTask, taskList.size());
+                    } else {
+                        ui.showError("Please enter a valid task ID");
+                    }
                 }
                 saveList();
             }

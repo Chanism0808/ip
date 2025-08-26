@@ -1,5 +1,6 @@
-D | 0 | project meeting | Jan 01 2010 14:20
 T | 0 | CS2103 iP
 T | 0 | test
-E | 0 | Retreat | Oct 10 2019 10:10 | Oct 12 2019 11:11
+E | 1 | Retreat | Oct 10 2019 10:10 | Oct 12 2019 11:11
 D | 0 | project | Sep 09 2001 09:09
+E | 0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
+D | 0 | sleep | Dec 10 2019 08:00
