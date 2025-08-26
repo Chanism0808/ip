@@ -11,10 +11,12 @@ import java.time.format.DateTimeFormatter;
 public class Dupe {
     static ArrayList<Task>  taskArrayList = new ArrayList<>();
     static Ui ui = new Ui();
+    //static TaskList taskList = new TaskList(ui, taskArrayList);
 
     public static void main(String[] args) {
         ui.showGreeting();
         loadList();
+        TaskList taskList =  new TaskList(ui, taskArrayList);
 
         Scanner sc = new Scanner(System.in);
         while (sc.hasNextLine()) {
@@ -28,33 +30,26 @@ public class Dupe {
                 break;
 
             } else if (command.equals("list")) {
-                ui.showTaskList(taskArrayList);
+                taskList.listTasks();
 
             } else if (command.equals("mark")) {
                 if (!isArgumentEmpty(argument)) { //if it is not empty the whole statement is true
                     int taskID = Integer.parseInt(parts[1]);
-                    if (isInRange(taskID)) {
-                        mark(taskID); //will oop it with tasklist later
-                        ui.showTaskMarked(taskArrayList.get(taskID-1));
-                    }
+                    taskList.markTaskDone(taskID);
                 }
                 saveList();
 
             } else if (command.equals("unmark")) {
                 if (!isArgumentEmpty(argument)) {
                     int taskID = Integer.parseInt(parts[1]);
-                    if (isInRange(taskID)) {
-                        unmark(taskID); //will oop it with tasklist later
-                        ui.showTaskUnmarked(taskArrayList.get(taskID-1));
-                    }
+                    taskList.markTaskUndone(taskID);
                 }
                 saveList();
 
             } else if (command.equals("todo")) {
                 if (!isArgumentEmptyTask(argument)) {
                     ToDos task = new ToDos(parts[1]);
-                    taskArrayList.add(task);
-                    ui.showTaskAdded(task,taskArrayList.size());
+                    taskList.addTask(task); //addTask() in TaskList.java
                 }
                 saveList();
 
@@ -69,8 +64,7 @@ public class Dupe {
                             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
                             LocalDateTime dateTime = LocalDateTime.parse(deadline, formatter);
                             Deadlines task  = new Deadlines(description, dateTime);
-                            taskArrayList.add(task);
-                            ui.showTaskAdded(task,taskArrayList.size());
+                            taskList.addTask(task); //addTask() in TaskList.java
                         } catch (DateTimeParseException e) {
                             ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                         }
@@ -95,8 +89,7 @@ public class Dupe {
                                 LocalDateTime dateTimeFrom = LocalDateTime.parse(from, formatter);
                                 LocalDateTime dateTimeTo = LocalDateTime.parse(to, formatter);
                                 Events task = new Events(description, dateTimeFrom, dateTimeTo);
-                                taskArrayList.add(task);
-                                ui.showTaskAdded(task,taskArrayList.size());
+                                taskList.addTask(task); //addTask() in TaskList.java
                             } catch (DateTimeParseException e) {
                                 ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                             }
@@ -111,10 +104,7 @@ public class Dupe {
             } else if (command.equals("delete")) {
                 if (!isArgumentEmpty(argument)) {
                     int taskID = Integer.parseInt(argument);
-                    if (isInRange(taskID)) {
-                        ui.showTaskDeleted(taskArrayList.get(taskID-1), taskArrayList.size());
-                        deleteTask(taskID); //will oop it with tasklist later
-                    }
+                    taskList.deleteTask(taskID);
                 }
                 saveList();
             }
@@ -205,14 +195,6 @@ public class Dupe {
 
     }
 
-    public static boolean isInRange(int taskID){
-        if (taskID <= 0 || taskID > taskArrayList.size()) {
-            ui.showError("Please enter a valid task ID");
-            return false;
-        }
-        return true;
-    }
-
     public static boolean isArgumentEmpty(String input) {
         if (input.isEmpty()) {
             ui.showError("Please enter a task number.");
@@ -227,36 +209,5 @@ public class Dupe {
             return true;
         }
         return false;
-    }
-
-//    public static void taskOutputMsg(Task task) {
-//        System.out.println("____________________\n"
-//                + "Got it. I've added this task:\n"
-//                + task
-//                + "\nNow you have " + taskArrayList.size() + " tasks in the list."
-//                + "\n____________________");
-//    }
-
-    public static void mark(int option) {
-        //System.out.println("Nice! I've marked this task as done:");
-        Task selectedTask = taskArrayList.get(option-1);
-        selectedTask.markAsDone();
-        //System.out.println(selectedTask + "\n____________________");
-    }
-
-    public static void unmark(int option) {
-        //System.out.println("OK, I've marked this task as not done yet:");
-        Task selectedTask = taskArrayList.get(option-1);
-        selectedTask.markAsNotDone();
-        //System.out.println(selectedTask + "\n____________________");
-    }
-
-    public static void deleteTask(int option) {
-        Task selectedTask = taskArrayList.get(option-1);
-        taskArrayList.remove(option-1);
-        //System.out.println("____________________\n"
-        //        + selectedTask.toString()
-        //        + "\nNow you have " + taskArrayList.size() + " tasks in the list."
-        //        + "\n____________________");
     }
 }
