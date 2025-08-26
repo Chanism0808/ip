@@ -1,8 +1,12 @@
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Dupe {
     static ArrayList<Task>  taskArrayList = new ArrayList<>();
@@ -61,9 +65,15 @@ public class Dupe {
                     String description = subparts[0];
                     String deadline = subparts.length > 1 ? subparts[1] : "";
                     if (!deadline.isEmpty()) {
-                        Deadlines task  = new Deadlines(description, deadline);
-                        taskArrayList.add(task);
-                        taskOutputMsg(task);
+                        try {
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                            LocalDateTime dateTime = LocalDateTime.parse(deadline, formatter);
+                            Deadlines task  = new Deadlines(description, dateTime);
+                            taskArrayList.add(task);
+                            taskOutputMsg(task);
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Invalid date format. Please use dd-MM-yyyy HH:mm");
+                        }
                     } else {
                         System.out.println("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
                     }
@@ -80,9 +90,16 @@ public class Dupe {
                         String from = subdateTime[0];
                         String to = subdateTime.length > 1 ? subdateTime[1] : "";
                         if (!to.isEmpty()) {
-                            Events task = new Events(description, from, to);
-                            taskArrayList.add(task);
-                            taskOutputMsg(task);
+                            try {
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                                LocalDateTime dateTimeFrom = LocalDateTime.parse(from, formatter);
+                                LocalDateTime dateTimeTo = LocalDateTime.parse(to, formatter);
+                                Events task = new Events(description, dateTimeFrom, dateTimeTo);
+                                taskArrayList.add(task);
+                                taskOutputMsg(task);
+                            } catch (DateTimeParseException e) {
+                                System.out.println("Invalid date format. Please use dd-MM-yyyy HH:mm");
+                            }
                         }
                         System.out.println("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     } else{
@@ -159,14 +176,19 @@ public class Dupe {
                     taskArrayList.add(task);
                 }
                 else if (type.equals("D")) {
-                    Deadlines task = new Deadlines(parts[2], parts[3]);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+                    LocalDateTime dateTime = LocalDateTime.parse(parts[3], formatter);
+                    Deadlines task = new Deadlines(parts[2], dateTime);
                     if (parts[1].equals("1")) {
                         task.markAsDone();
                     }
                     taskArrayList.add(task);
                 }
                 else if (type.equals("E")) {
-                    Events task = new Events(parts[2], parts[3], parts[4]);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+                    LocalDateTime dateTimeFrom = LocalDateTime.parse(parts[3], formatter);
+                    LocalDateTime dateTimeTo = LocalDateTime.parse(parts[4], formatter);
+                    Events task = new Events(parts[2], dateTimeFrom, dateTimeTo);
                     if (parts[1].equals("1")) {
                         task.markAsDone();
                     }

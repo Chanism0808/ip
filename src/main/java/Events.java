@@ -1,8 +1,11 @@
-public class Events extends Task{
-    private String from;
-    private String to;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    public Events(String description, String from, String to) {
+public class Events extends Task{
+    private LocalDateTime from;
+    private LocalDateTime to;
+
+    public Events(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
         this.from = from;
         this.to = to;
@@ -10,11 +13,17 @@ public class Events extends Task{
 
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + this.from + ", to: " + this.to + ")";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+        String deadlineFromString = this.from.format(formatter); // Aug 08 2001 14:30
+        String deadlineToString = this.to.format(formatter); // Aug 08 2001 14:30
+        return "[E]" + super.toString() + " (from: " + deadlineFromString + ", to: " + deadlineToString + ")";
     }
 
     @Override
     public String savedListFormat() {
-        return "D | " + super.savedListFormat() + " | " + this.to + " | " + this.from;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+        String deadlineFromString = this.from.format(formatter); // Aug 08 2001 14:30
+        String deadlineToString = this.to.format(formatter); // Aug 08 2001 14:30
+        return "E | " + super.savedListFormat() + " | " + deadlineFromString + " | " + deadlineToString;
     }
 }
