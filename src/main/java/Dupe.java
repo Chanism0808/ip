@@ -85,7 +85,10 @@ public class Dupe {
                         String from = subdateTime[0];
                         String to = subdateTime.length > 1 ? subdateTime[1] : "";
                         if (!to.isEmpty()) {
-                            Events task = new Events(description, from, to);
+                            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                            LocalDateTime dateTimeFrom = LocalDateTime.parse(from, formatter);
+                            LocalDateTime dateTimeTo = LocalDateTime.parse(to, formatter);
+                            Events task = new Events(description, dateTimeFrom, dateTimeTo);
                             taskArrayList.add(task);
                             taskOutputMsg(task);
                         }
@@ -173,7 +176,10 @@ public class Dupe {
                     taskArrayList.add(task);
                 }
                 else if (type.equals("E")) {
-                    Events task = new Events(parts[2], parts[3], parts[4]);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+                    LocalDateTime dateTimeFrom = LocalDateTime.parse(parts[3], formatter);
+                    LocalDateTime dateTimeTo = LocalDateTime.parse(parts[4], formatter);
+                    Events task = new Events(parts[2], dateTimeFrom, dateTimeTo);
                     if (parts[1].equals("1")) {
                         task.markAsDone();
                     }
