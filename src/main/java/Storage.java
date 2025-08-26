@@ -1,0 +1,80 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Storage {
+    private final String filePath;
+
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public ArrayList<Task> load() throws IOException {
+        File file = new File(filePath);
+
+        // Ensure file exists
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+            return new ArrayList<>(); // return empty list if no file
+        }
+
+        TaskList taskList = new TaskList();
+        Scanner fileScanner = new Scanner(file);
+
+        while (fileScanner.hasNextLine()) {
+            String line = fileScanner.nextLine();
+            String[] parts = line.split(" \\| ");
+            String type = parts[0];
+
+            if (type.equals("T")) {
+                ToDos task = new ToDos(parts[2]);
+                if (parts[1].equals("1")) {
+                    task.markAsDone();
+                }
+                taskList.addTask(task);
+            } else if (type.equals("D")) {
+                LocalDateTime dateTime = Parser.parseDateTimeFile(parts[3]);
+                Deadlines task = new Deadlines(parts[2], dateTime);
+                if (parts[1].equals("1")) {
+                    task.markAsDone();
+                }
+                taskList.addTask(task);
+            } else if (type.equals("E")) {
+                LocalDateTime dateTimeFrom = Parser.parseDateTimeFile(parts[3]);
+                LocalDateTime dateTimeTo = Parser.parseDateTimeFile(parts[4]);
+                Events task = new Events(parts[2], dateTimeFrom, dateTimeTo);
+                if (parts[1].equals("1")) {
+                    task.markAsDone();
+                }
+                taskList.addTask(task);
+            }
+        }
+        fileScanner.close();
+
+        return taskList.getTasks();
+    }
+
+    public void save(ArrayList<Task> tasks, Ui ui) {
+        File file = new File(filePath);
+
+        try {
+            if (!file.exists()) {
+                file.getParentFile().mkdirs(); // create directories if needed
+                file.createNewFile();
+                ui.showError("File not found. Created new file at: " + filePath);
+            }
+
+            FileWriter fw = new FileWriter(file); // overwrite file
+            for (Task task : tasks) {
+                fw.write(task.savedListFormat() + "\n");
+            }
+            fw.close();
+        } catch (IOException e) {
+            ui.showError("An error occurred while saving tasks: " + e.getMessage());
+        }
+    }
+}
