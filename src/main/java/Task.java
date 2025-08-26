@@ -25,4 +25,12 @@ public class Task {
         }
         return "[ ] " + description;
     }
+
+    public String savedListFormat() {
+        if(isDone){
+            return "1 | " + description;
+        }
+        return "0 | " + description;
+    }
+
 }
