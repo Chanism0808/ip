@@ -3,6 +3,9 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Dupe {
     static ArrayList<Task>  taskArrayList = new ArrayList<>();
@@ -61,7 +64,9 @@ public class Dupe {
                     String description = subparts[0];
                     String deadline = subparts.length > 1 ? subparts[1] : "";
                     if (!deadline.isEmpty()) {
-                        Deadlines task  = new Deadlines(description, deadline);
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                        LocalDateTime dateTime = LocalDateTime.parse(deadline, formatter);
+                        Deadlines task  = new Deadlines(description, dateTime);
                         taskArrayList.add(task);
                         taskOutputMsg(task);
                     } else {
@@ -159,7 +164,9 @@ public class Dupe {
                     taskArrayList.add(task);
                 }
                 else if (type.equals("D")) {
-                    Deadlines task = new Deadlines(parts[2], parts[3]);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+                    LocalDateTime dateTime = LocalDateTime.parse(parts[3], formatter);
+                    Deadlines task = new Deadlines(parts[2], dateTime);
                     if (parts[1].equals("1")) {
                         task.markAsDone();
                     }
