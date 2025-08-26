@@ -10,12 +10,10 @@ import java.time.format.DateTimeFormatter;
 
 public class Dupe {
     static ArrayList<Task>  taskArrayList = new ArrayList<>();
+    static Ui ui = new Ui();
 
     public static void main(String[] args) {
-        String greetings = "____________________\n"
-                + "Hello! I'm Dupe";
-        System.out.println(greetings);
-        query();
+        ui.showGreeting();
         loadList();
 
         Scanner sc = new Scanner(System.in);
@@ -26,17 +24,18 @@ public class Dupe {
             String argument = parts.length > 1 ? parts[1] : "";
 
             if (command.equals("bye")) {
-                exit();
+                ui.showExit();
                 break;
 
             } else if (command.equals("list")) {
-                listTasks();
+                ui.showTaskList(taskArrayList);
 
             } else if (command.equals("mark")) {
                 if (!isArgumentEmpty(argument)) { //if it is not empty the whole statement is true
                     int taskID = Integer.parseInt(parts[1]);
                     if (isInRange(taskID)) {
-                        mark(taskID);
+                        mark(taskID); //will oop it with tasklist later
+                        ui.showTaskMarked(taskArrayList.get(taskID-1));
                     }
                 }
                 saveList();
@@ -45,7 +44,8 @@ public class Dupe {
                 if (!isArgumentEmpty(argument)) {
                     int taskID = Integer.parseInt(parts[1]);
                     if (isInRange(taskID)) {
-                        unmark(taskID);
+                        unmark(taskID); //will oop it with tasklist later
+                        ui.showTaskUnmarked(taskArrayList.get(taskID-1));
                     }
                 }
                 saveList();
@@ -54,7 +54,7 @@ public class Dupe {
                 if (!isArgumentEmptyTask(argument)) {
                     ToDos task = new ToDos(parts[1]);
                     taskArrayList.add(task);
-                    taskOutputMsg(task);
+                    ui.showTaskAdded(task,taskArrayList.size());
                 }
                 saveList();
 
@@ -70,12 +70,12 @@ public class Dupe {
                             LocalDateTime dateTime = LocalDateTime.parse(deadline, formatter);
                             Deadlines task  = new Deadlines(description, dateTime);
                             taskArrayList.add(task);
-                            taskOutputMsg(task);
+                            ui.showTaskAdded(task,taskArrayList.size());
                         } catch (DateTimeParseException e) {
-                            System.out.println("Invalid date format. Please use dd-MM-yyyy HH:mm");
+                            ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                         }
                     } else {
-                        System.out.println("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
+                        ui.showError("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
                     }
                 }
                 saveList();
@@ -96,14 +96,14 @@ public class Dupe {
                                 LocalDateTime dateTimeTo = LocalDateTime.parse(to, formatter);
                                 Events task = new Events(description, dateTimeFrom, dateTimeTo);
                                 taskArrayList.add(task);
-                                taskOutputMsg(task);
+                                ui.showTaskAdded(task,taskArrayList.size());
                             } catch (DateTimeParseException e) {
-                                System.out.println("Invalid date format. Please use dd-MM-yyyy HH:mm");
+                                ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                             }
                         }
-                        System.out.println("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
+                        ui.showError("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     } else{
-                        System.out.println("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
+                        ui.showError("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     }
                 }
                 saveList();
@@ -112,13 +112,14 @@ public class Dupe {
                 if (!isArgumentEmpty(argument)) {
                     int taskID = Integer.parseInt(argument);
                     if (isInRange(taskID)) {
-                        deleteTask(taskID);
+                        ui.showTaskDeleted(taskArrayList.get(taskID-1), taskArrayList.size());
+                        deleteTask(taskID); //will oop it with tasklist later
                     }
                 }
                 saveList();
             }
             else {
-                System.out.println("____________________\n"
+                ui.showError("\n____________________\n"
                         + "Invalid Command\n"
                         + "____________________");
             }
@@ -135,7 +136,7 @@ public class Dupe {
             if (!file.exists()) {
                 file.getParentFile().mkdirs(); // create "data" folder if not exist
                 file.createNewFile();
-                System.out.println("File not found. Created new file at: " + filePath);
+                ui.showError("File not found. Created new file at: " + filePath);
                 return;
             }
             FileWriter fw = new FileWriter("data/tasks.txt"); // 'true' = append mode
@@ -144,7 +145,7 @@ public class Dupe {
             }
             fw.close();
         } catch (IOException e) {
-            System.out.println("An error occurred while saving tasks: " + e.getMessage());
+            ui.showError("An error occurred while saving tasks: " + e.getMessage());
         }
     }
 
@@ -157,7 +158,7 @@ public class Dupe {
             if (!file.exists()) {
                 file.getParentFile().mkdirs(); // create "data" folder if not exist
                 file.createNewFile();
-                System.out.println("File not found. Created new file at: " + filePath);
+                ui.showError("File not found. Created new file at: " + filePath);
                 return;
             }
             // Read from the file and load tasks
@@ -196,19 +197,17 @@ public class Dupe {
                 }
             }
             fileScanner.close();
-            System.out.println("____________________\n"
-                    + "Loaded " + taskArrayList.size() + " tasks from file."
-                    + "\n____________________");
+            ui.showListLoaded(taskArrayList);
 
         } catch (IOException e) {
-            System.out.println("An error occurred while loading tasks: " + e.getMessage());
+            ui.showError("An error occurred while loading tasks: " + e.getMessage());
         }
 
     }
 
     public static boolean isInRange(int taskID){
         if (taskID <= 0 || taskID > taskArrayList.size()) {
-            System.out.println("Please enter a valid task ID");
+            ui.showError("Please enter a valid task ID");
             return false;
         }
         return true;
@@ -216,7 +215,7 @@ public class Dupe {
 
     public static boolean isArgumentEmpty(String input) {
         if (input.isEmpty()) {
-            System.out.println("Please enter a task number.");
+            ui.showError("Please enter a task number.");
             return true;
         }
         return false;
@@ -224,60 +223,40 @@ public class Dupe {
 
     public static boolean isArgumentEmptyTask(String input) {
         if (input.isEmpty()) {
-            System.out.println("Please enter description.");
+            ui.showError("Please enter description.");
             return true;
         }
         return false;
     }
 
-    public static void taskOutputMsg(Task task) {
-        System.out.println("____________________\n"
-                + "Got it. I've added this task:\n"
-                + task
-                + "\nNow you have " + taskArrayList.size() + " tasks in the list."
-                + "\n____________________");
-    }
-
-    public static void query() {
-        System.out.println("What can I do for you?\n"
-                + "____________________");
-    }
-
-    public static void exit() {
-        System.out.println("____________________\n"
-                        + "Goodbye! Hope to see you again soon!\n"
-                        + "____________________");
-    }
-
-    public static void listTasks() {
-        System.out.println("____________________\n"
-                        +"Here are the list of tasks:\n");
-        for (int i = 0; i < taskArrayList.size(); i++) {
-            System.out.println(i+1 + "." + taskArrayList.get(i));
-        }
-        System.out.println("____________________\n");
-    }
+//    public static void taskOutputMsg(Task task) {
+//        System.out.println("____________________\n"
+//                + "Got it. I've added this task:\n"
+//                + task
+//                + "\nNow you have " + taskArrayList.size() + " tasks in the list."
+//                + "\n____________________");
+//    }
 
     public static void mark(int option) {
-        System.out.println("Nice! I've marked this task as done:");
+        //System.out.println("Nice! I've marked this task as done:");
         Task selectedTask = taskArrayList.get(option-1);
         selectedTask.markAsDone();
-        System.out.println(selectedTask + "\n____________________");
+        //System.out.println(selectedTask + "\n____________________");
     }
 
     public static void unmark(int option) {
-        System.out.println("OK, I've marked this task as not done yet:");
+        //System.out.println("OK, I've marked this task as not done yet:");
         Task selectedTask = taskArrayList.get(option-1);
         selectedTask.markAsNotDone();
-        System.out.println(selectedTask + "\n____________________");
+        //System.out.println(selectedTask + "\n____________________");
     }
 
     public static void deleteTask(int option) {
         Task selectedTask = taskArrayList.get(option-1);
         taskArrayList.remove(option-1);
-        System.out.println("____________________\n"
-                + selectedTask.toString()
-                + "\nNow you have " + taskArrayList.size() + " tasks in the list."
-                + "\n____________________");
+        //System.out.println("____________________\n"
+        //        + selectedTask.toString()
+        //        + "\nNow you have " + taskArrayList.size() + " tasks in the list."
+        //        + "\n____________________");
     }
 }
