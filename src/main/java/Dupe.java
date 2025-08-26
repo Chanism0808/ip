@@ -35,6 +35,7 @@ public class Dupe {
                         mark(taskID);
                     }
                 }
+                saveList();
 
             } else if (command.equals("unmark")) {
                 if (!isArgumentEmpty(argument)) {
@@ -43,6 +44,7 @@ public class Dupe {
                         unmark(taskID);
                     }
                 }
+                saveList();
 
             } else if (command.equals("todo")) {
                 if (!isArgumentEmptyTask(argument)) {
@@ -50,6 +52,7 @@ public class Dupe {
                     taskArrayList.add(task);
                     taskOutputMsg(task);
                 }
+                saveList();
 
             } else if (command.equals("deadline")) {
                 //String[] arguments = input.split(" ",2);
@@ -64,8 +67,8 @@ public class Dupe {
                     } else {
                         System.out.println("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
                     }
-
                 }
+                saveList();
 
             } else if (command.equals("event")) {
                 if (!isArgumentEmptyTask(argument)) {
@@ -86,6 +89,8 @@ public class Dupe {
                         System.out.println("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     }
                 }
+                saveList();
+
             } else if (command.equals("delete")) {
                 if (!isArgumentEmpty(argument)) {
                     int taskID = Integer.parseInt(argument);
@@ -93,12 +98,36 @@ public class Dupe {
                         deleteTask(taskID);
                     }
                 }
+                saveList();
             }
             else {
                 System.out.println("____________________\n"
                         + "Invalid Command\n"
                         + "____________________");
             }
+        }
+    }
+
+
+    public static void saveList() {
+        String filePath = "./data/tasks.txt";
+        File file = new File(filePath);
+
+        try {
+            // If file doesn't exist, create it
+            if (!file.exists()) {
+                file.getParentFile().mkdirs(); // create "data" folder if not exist
+                file.createNewFile();
+                System.out.println("File not found. Created new file at: " + filePath);
+                return;
+            }
+            FileWriter fw = new FileWriter("data/tasks.txt"); // 'true' = append mode
+            for (Task task : taskArrayList) {
+                fw.write(task.savedListFormat() + "\n");
+            }
+            fw.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving tasks: " + e.getMessage());
         }
     }
 
