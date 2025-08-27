@@ -8,7 +8,6 @@ public class Ui {
                 + "____________________");
     }
 
-
     // Print goodbye message
     public void showExit() {
         System.out.println("____________________\nGoodbye! Hope to see you again soon!\n____________________");

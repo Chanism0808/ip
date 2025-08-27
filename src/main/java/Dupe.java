@@ -1,11 +1,7 @@
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Dupe {
     private Storage storage;
@@ -26,16 +22,9 @@ public class Dupe {
 
     public void run() {
         ui.showGreeting();
-//        loadList();
-//        TaskList taskList =  new TaskList(taskArrayList);
 
         Scanner sc = new Scanner(System.in);
         while (sc.hasNextLine()) {
-//            String input = sc.nextLine();
-//            String[] parts = input.split(" ", 2); // split into at most 2 parts
-//            String command = parts[0];
-//            String argument = parts.length > 1 ? parts[1] : "";
-
             String input = sc.nextLine();
             String[] parsed = Parser.parse(input);
             String command = parsed[0];
@@ -166,82 +155,4 @@ public class Dupe {
     public static void main(String[] args) {
         new Dupe("data/tasks.txt").run();
     }
-
-
-//    public static void saveList() {
-//        String filePath = "./data/tasks.txt";
-//        File file = new File(filePath);
-//
-//        try {
-//            // If file doesn't exist, create it
-//            if (!file.exists()) {
-//                file.getParentFile().mkdirs(); // create "data" folder if not exist
-//                file.createNewFile();
-//                ui.showError("File not found. Created new file at: " + filePath);
-//                return;
-//            }
-//            FileWriter fw = new FileWriter("data/tasks.txt"); // 'true' = append mode
-//            for (Task task : taskArrayList) {
-//                fw.write(task.savedListFormat() + "\n");
-//            }
-//            fw.close();
-//        } catch (IOException e) {
-//            ui.showError("An error occurred while saving tasks: " + e.getMessage());
-//        }
-//    }
-//
-//    public static void loadList() {
-//        String filePath = "./data/tasks.txt"; // relative path
-//        File file = new File(filePath);
-//
-//        try {
-//            // If file doesn't exist, create it
-//            if (!file.exists()) {
-//                file.getParentFile().mkdirs(); // create "data" folder if not exist
-//                file.createNewFile();
-//                ui.showError("File not found. Created new file at: " + filePath);
-//                return;
-//            }
-//            // Read from the file and load tasks
-//            Scanner fileScanner = new Scanner(file);
-//
-//            while (fileScanner.hasNextLine()) {
-//                String line = fileScanner.nextLine();
-//                String[] parts = line.split(" \\| ");
-//                String type = parts[0];
-//
-//                if (type.equals("T")) {
-//                    ToDos task = new ToDos(parts[2]);
-//                    if (parts[1].equals("1")) {
-//                        task.markAsDone();
-//                    }
-//                    taskArrayList.add(task);
-//                }
-//                else if (type.equals("D")) {
-//                    LocalDateTime dateTime = Parser.parseDateTimeFile(parts[3]);
-//                    Deadlines task = new Deadlines(parts[2], dateTime);
-//                    if (parts[1].equals("1")) {
-//                        task.markAsDone();
-//                    }
-//                    taskArrayList.add(task);
-//                }
-//                else if (type.equals("E")) {
-//                    LocalDateTime dateTimeFrom = Parser.parseDateTimeFile(parts[3]);
-//                    LocalDateTime dateTimeTo = Parser.parseDateTimeFile(parts[4]);
-//                    Events task = new Events(parts[2], dateTimeFrom, dateTimeTo);
-//                    if (parts[1].equals("1")) {
-//                        task.markAsDone();
-//                    }
-//                    taskArrayList.add(task);
-//                }
-//            }
-//            fileScanner.close();
-//            ui.showListLoaded(taskArrayList);
-//
-//        } catch (IOException e) {
-//            ui.showError("An error occurred while loading tasks: " + e.getMessage());
-//        }
-//
-//    }
-
 }

@@ -46,13 +46,11 @@ public class Parser {
 
     public static LocalDateTime parseDateTime(String deadline) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
-        LocalDateTime dateTime = LocalDateTime.parse(deadline, formatter);
-        return dateTime;
+        return LocalDateTime.parse(deadline, formatter);
     }
 
     public static LocalDateTime parseDateTimeFile(String dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
-        LocalDateTime formattedDateTime = LocalDateTime.parse(dateTime, formatter);
-        return formattedDateTime;
+        return LocalDateTime.parse(dateTime, formatter);
     }
 }
