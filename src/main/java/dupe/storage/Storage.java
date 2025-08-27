@@ -1,9 +1,19 @@
+package dupe.storage;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import dupe.tasks.Task;
+import dupe.tasks.Deadlines;
+import dupe.tasks.TaskList;
+import dupe.tasks.ToDos;
+import dupe.parser.Parser;
+import dupe.ui.Ui;
+import dupe.tasks.Events;
 
 public class Storage {
     private final String filePath;

@@ -1,4 +1,8 @@
+package dupe.ui;
+
 import java.util.ArrayList;
+import dupe.tasks.Task;
+
 public class Ui {
     // Print greeting when the program starts
     public void showGreeting() {
