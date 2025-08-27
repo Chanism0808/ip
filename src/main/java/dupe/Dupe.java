@@ -1,7 +1,17 @@
+package dupe;
+
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import dupe.tasks.Task;
+import dupe.tasks.Deadlines;
+import dupe.tasks.TaskList;
+import dupe.tasks.ToDos;
+import dupe.parser.Parser;
+import dupe.storage.Storage;
+import dupe.ui.Ui;
+import dupe.tasks.Events;
 
 public class Dupe {
     private Storage storage;
