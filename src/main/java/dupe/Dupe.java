@@ -5,13 +5,13 @@ import java.util.Scanner;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import dupe.tasks.Task;
-import dupe.tasks.Deadlines;
+import dupe.tasks.Deadline;
 import dupe.tasks.TaskList;
-import dupe.tasks.ToDos;
+import dupe.tasks.ToDo;
 import dupe.parser.Parser;
 import dupe.storage.Storage;
 import dupe.ui.Ui;
-import dupe.tasks.Events;
+import dupe.tasks.Event;
 
 public class Dupe {
     private Storage storage;
@@ -83,7 +83,7 @@ public class Dupe {
                 if (argument.isEmpty()) {
                     ui.showError("Please enter description.");
                 } else {
-                    ToDos task = new ToDos(argument);
+                    ToDo task = new ToDo(argument);
                     tasks.addTask(task);
                     ui.showTaskAdded(task, tasks.size());
                 }
@@ -99,7 +99,7 @@ public class Dupe {
                     if (!deadline.isEmpty()) {
                         try {
                             LocalDateTime dateTime = Parser.parseDateTime(deadline);
-                            Deadlines task  = new Deadlines(description, dateTime);
+                            Deadline task  = new Deadline(description, dateTime);
                             tasks.addTask(task);
                             ui.showTaskAdded(task,tasks.size()); //HERE
                         } catch (DateTimeParseException e) {
@@ -126,7 +126,7 @@ public class Dupe {
                             try {
                                 LocalDateTime dateTimeFrom = Parser.parseDateTime(from);
                                 LocalDateTime dateTimeTo = Parser.parseDateTime(to);
-                                Events task = new Events(description, dateTimeFrom, dateTimeTo);
+                                Event task = new Event(description, dateTimeFrom, dateTimeTo);
                                 tasks.addTask(task);
                                 ui.showTaskAdded(task, tasks.size());
                             } catch (DateTimeParseException e) {

@@ -8,12 +8,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import dupe.tasks.Task;
-import dupe.tasks.Deadlines;
+import dupe.tasks.Deadline;
 import dupe.tasks.TaskList;
-import dupe.tasks.ToDos;
+import dupe.tasks.ToDo;
 import dupe.parser.Parser;
 import dupe.ui.Ui;
-import dupe.tasks.Events;
+import dupe.tasks.Event;
 
 public class Storage {
     private final String filePath;
@@ -41,14 +41,14 @@ public class Storage {
             String type = parts[0];
 
             if (type.equals("T")) {
-                ToDos task = new ToDos(parts[2]);
+                ToDo task = new ToDo(parts[2]);
                 if (parts[1].equals("1")) {
                     task.markAsDone();
                 }
                 taskList.addTask(task);
             } else if (type.equals("D")) {
                 LocalDateTime dateTime = Parser.parseDateTimeFile(parts[3]);
-                Deadlines task = new Deadlines(parts[2], dateTime);
+                Deadline task = new Deadline(parts[2], dateTime);
                 if (parts[1].equals("1")) {
                     task.markAsDone();
                 }
@@ -56,7 +56,7 @@ public class Storage {
             } else if (type.equals("E")) {
                 LocalDateTime dateTimeFrom = Parser.parseDateTimeFile(parts[3]);
                 LocalDateTime dateTimeTo = Parser.parseDateTimeFile(parts[4]);
-                Events task = new Events(parts[2], dateTimeFrom, dateTimeTo);
+                Event task = new Event(parts[2], dateTimeFrom, dateTimeTo);
                 if (parts[1].equals("1")) {
                     task.markAsDone();
                 }
