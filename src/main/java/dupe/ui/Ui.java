@@ -19,7 +19,7 @@ public class Ui {
 
     // Print error message
     public void showError(String message) {
-        System.out.println("Error: " + message);
+        System.out.println("Error!! " + message);
     }
 
     public void showTaskAdded(Task task, int taskCount) {
