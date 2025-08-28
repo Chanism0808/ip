@@ -44,6 +44,15 @@ public class TaskList {
         return selectedTask;
     }
 
+    public boolean isFound(String keyword) {
+        for (Task task : tasks) {
+            if (task.hasString(keyword)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public ArrayList<Task> getTasks() {
         return new ArrayList<>(tasks); // defensive copy
     }

@@ -10,9 +10,13 @@ import dupe.storage.Storage;
 import dupe.tasks.Deadline;
 import dupe.tasks.Event;
 import dupe.tasks.Task;
+import dupe.tasks.Deadline;
 import dupe.tasks.TaskList;
 import dupe.tasks.ToDo;
+import dupe.parser.Parser;
+import dupe.storage.Storage;
 import dupe.ui.Ui;
+import dupe.tasks.Event;
 
 public class Dupe {
     private Storage storage;
