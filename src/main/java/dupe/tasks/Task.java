@@ -44,12 +44,6 @@ public class Task {
         isDone = false;
     }
 
-    /**
-     * Returns a string representation of this task for display purposes.
-     * Shows the completion status followed by the description.
-     *
-     * @return String representation of the task.
-     */
     @Override
     public String toString() {
         if (isDone) {
