@@ -34,6 +34,7 @@ application {
 shadowJar {
     archiveBaseName = "dupe"
     archiveClassifier = null
+    archiveFileName = 'dupe.jar'
 }
 
 run{
