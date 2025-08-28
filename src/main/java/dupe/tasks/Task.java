@@ -28,6 +28,10 @@ public class Task {
         return "[ ] " + description;
     }
 
+    public boolean hasString(String string) {
+        return description.contains(string);
+    }
+
     public String savedListFormat() {
         if(isDone){
             return "1 | " + description;
