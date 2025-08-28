@@ -1,4 +1,5 @@
 package dupe.parser;
+
 import dupe.tasks.Task;
 
 import java.time.LocalDateTime;
@@ -6,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Parser {
+
     public static String[] parse(String input) {
         String[] parts = input.split(" ", 2);
         String command = parts[0];
