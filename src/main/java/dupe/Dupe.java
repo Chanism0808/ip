@@ -1,18 +1,17 @@
 package dupe;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
-
-import dupe.parser.Parser;
-import dupe.storage.Storage;
-import dupe.tasks.Deadline;
-import dupe.tasks.Event;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import dupe.tasks.Task;
+import dupe.tasks.Deadline;
 import dupe.tasks.TaskList;
 import dupe.tasks.ToDo;
+import dupe.parser.Parser;
+import dupe.storage.Storage;
 import dupe.ui.Ui;
+import dupe.tasks.Event;
 
 public class Dupe {
     private Storage storage;
@@ -35,7 +34,6 @@ public class Dupe {
         ui.showGreeting();
 
         Scanner sc = new Scanner(System.in);
-
         while (sc.hasNextLine()) {
             String input = sc.nextLine();
             String[] parsed = Parser.parse(input);
@@ -57,9 +55,9 @@ public class Dupe {
                 if (argument.isEmpty()) {
                     ui.showError("Please enter a task number.");
                 } else {
-                    int taskId = Integer.parseInt(argument);
-                    if (Parser.isValidIndex(taskId, tasks.getTasks())) {
-                        Task selectedTask = tasks.markTaskDone(taskId);
+                    int taskID = Integer.parseInt(argument);
+                    if (Parser.isValidIndex(taskID, tasks.getTasks())) {
+                        Task selectedTask =  tasks.markTaskDone(taskID);
                         ui.showTaskMarked(selectedTask);
                     } else {
                         ui.showError("Please enter a valid task ID");
@@ -71,9 +69,9 @@ public class Dupe {
                 if (argument.isEmpty()) {
                     ui.showError("Please enter a task number.");
                 } else {
-                    int taskId = Integer.parseInt(argument);
-                    if (Parser.isValidIndex(taskId, tasks.getTasks())) {
-                        Task selectedTask = tasks.markTaskUndone(taskId);
+                    int taskID = Integer.parseInt(argument);
+                    if (Parser.isValidIndex(taskID, tasks.getTasks())) {
+                        Task selectedTask =  tasks.markTaskUndone(taskID);
                         ui.showTaskUnmarked(selectedTask);
                     } else {
                         ui.showError("Please enter a valid task ID");
@@ -98,37 +96,32 @@ public class Dupe {
                     String[] subparts = Parser.parseBy(argument);
                     String description = subparts[0];
                     String deadline = subparts[1];
-
                     if (!deadline.isEmpty()) {
                         try {
                             LocalDateTime dateTime = Parser.parseDateTime(deadline);
-                            Deadline task = new Deadline(description, dateTime);
+                            Deadline task  = new Deadline(description, dateTime);
                             tasks.addTask(task);
-                            ui.showTaskAdded(task, tasks.size());
+                            ui.showTaskAdded(task,tasks.size()); //HERE
                         } catch (DateTimeParseException e) {
                             ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                         }
                     } else {
-                        ui.showError(
-                                "Please enter a valid deadline for the task | Format: deadline description /by deadline."
-                        );
+                        ui.showError("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
                     }
                 }
                 storage.save(tasks.getTasks(), ui);
 
             } else if (command.equals("event")) {
-                if (argument.isEmpty()) {
+                if  (argument.isEmpty()) {
                     ui.showError("Please enter description.");
                 } else {
                     String[] subparts = Parser.parseFrom(argument);
                     String description = subparts[0];
                     String dateTime = subparts[1];
-
                     if (!dateTime.isEmpty()) {
                         String[] subDateTime = Parser.parseTo(dateTime);
                         String from = subDateTime[0];
                         String to = subDateTime[1];
-
                         if (!to.isEmpty()) {
                             try {
                                 LocalDateTime dateTimeFrom = Parser.parseDateTime(from);
@@ -140,10 +133,8 @@ public class Dupe {
                                 ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                             }
                         }
-                    } else {
-                        ui.showError(
-                                "Please enter a valid datetime for the task | Format: event description /from datetime /to datetime."
-                        );
+                    } else{
+                        ui.showError("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
                     }
                 }
                 storage.save(tasks.getTasks(), ui);
@@ -152,9 +143,9 @@ public class Dupe {
                 if (argument.isEmpty()) {
                     ui.showError("Please enter a task number.");
                 } else {
-                    int taskId = Integer.parseInt(argument);
-                    if (Parser.isValidIndex(taskId, tasks.getTasks())) {
-                        Task deleteTask = tasks.deleteTask(taskId);
+                    int taskID = Integer.parseInt(argument);
+                    if (Parser.isValidIndex(taskID, tasks.getTasks())) {
+                        Task deleteTask = tasks.deleteTask(taskID);
                         ui.showTaskDeleted(deleteTask, tasks.size());
                     } else {
                         ui.showError("Please enter a valid task ID");
@@ -172,17 +163,12 @@ public class Dupe {
                         ui.showError("Sorry keyword: \"" + argument + "\" not found");
                     }
                 }
-
-            } else {
-                ui.showError(
-                        "\n____________________\n" +
-                                "Invalid Command\n" +
-                                "____________________"
-                );
+            else {
+                ui.showError("\n____________________\n"
+                        + "Invalid Command\n"
+                        + "____________________");
             }
         }
-
-        sc.close();
     }
 
     public static void main(String[] args) {
