@@ -8,6 +8,7 @@ public class TaskList {
     public TaskList() {
         tasks = new ArrayList<>();
     }
+
     public TaskList(ArrayList<Task> tasks) {
         this.tasks = tasks;
     }
@@ -39,13 +40,13 @@ public class TaskList {
     }
 
     public Task deleteTask(int option) {
-        Task selectedTask = tasks.get(option-1);
+        Task selectedTask = tasks.get(option - 1);
         tasks.remove(selectedTask);
         return selectedTask;
     }
 
     public ArrayList<Task> getTasks() {
-        return new ArrayList<>(tasks); // defensive copy
+        return new ArrayList<>(tasks);  // defensive copy
     }
 
     public boolean isEmpty() {
