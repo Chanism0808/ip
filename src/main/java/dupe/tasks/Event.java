@@ -3,10 +3,23 @@ package dupe.tasks;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Event extends Task{
+/**
+ * Represents an Event task that has a description,
+ * a start time, and an end time.
+ * Inherits from {@link Task}.
+ */
+public class Event extends Task {
     private LocalDateTime from;
     private LocalDateTime to;
 
+    /**
+     * Creates a new Event with the given description,
+     * start date and time, and end date and time.
+     *
+     * @param description The description of the event.
+     * @param from The starting date and time of the event.
+     * @param to The ending date and time of the event.
+     */
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
         this.from = from;
