@@ -27,7 +27,7 @@ public class Task {
      * @return Status icon of the task.
      */
     public String getStatusIcon() {
-        return (isDone ? "X" : " ");  // mark done task with X
+        return (isDone ? "X" : " "); // mark done task with X
     }
 
     /**
@@ -52,6 +52,11 @@ public class Task {
         return "[ ] " + description;
     }
 
+    /**
+     * Checks if the description contains the given string.
+     * @param string The string that user wants to find.
+     * @return {@code true} if the description contains the given string, {@code false} otherwise.
+     */
     public boolean hasString(String string) {
         return description.contains(string);
     }

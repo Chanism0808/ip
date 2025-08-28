@@ -13,23 +13,11 @@ public class ToDo extends Task {
         super(description);
     }
 
-    /**
-     * Returns the string representation of this to-do task.
-     * Format: [T] followed by the parent string representation.
-     *
-     * @return Formatted string representation of this to-do task.
-     */
     @Override
     public String toString() {
         return "[T]" + super.toString();
     }
 
-    /**
-     * Returns the string representation of this to-do task
-     * in the format used for saving to a file.
-     *
-     * @return Formatted save string for this to-do task.
-     */
     @Override
     public String savedListFormat() {
         return "T | " + super.savedListFormat();

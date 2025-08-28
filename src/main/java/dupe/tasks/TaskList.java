@@ -38,8 +38,8 @@ public class TaskList {
     /**
      * Marks the task at the given index as done.
      *
-     * @param option the index of the task (1-based)
-     * @return the task that was marked as done
+     * @param option the index of the task
+     * @return the task that was marked as not done
      * @throws IllegalArgumentException if the index is invalid
      */
     public Task markTaskDone(int option) {
@@ -54,7 +54,7 @@ public class TaskList {
     /**
      * Marks the task at the given index as not done.
      *
-     * @param option the index of the task (1-based)
+     * @param option the index of the task
      * @return the task that was marked as not done
      * @throws IllegalArgumentException if the index is invalid
      */
@@ -89,6 +89,11 @@ public class TaskList {
         return selectedTask;
     }
 
+    /**
+     * Checks if the keyword exists in the list of task.
+     * @param keyword The string that user wants to find.
+     * @return {@code true} if the keyword exists in the list of task, {@code false} otherwise.
+     */
     public boolean isFound(String keyword) {
         for (Task task : tasks) {
             if (task.hasString(keyword)) {
@@ -104,7 +109,7 @@ public class TaskList {
      * @return a copy of the task list
      */
     public ArrayList<Task> getTasks() {
-        return new ArrayList<>(tasks);  // defensive copy
+        return new ArrayList<>(tasks); // defensive copy
     }
 
     /**

@@ -64,6 +64,11 @@ public class Ui {
         System.out.println("____________________");
     }
 
+    /**
+     * Prints the list of tasks that has the keyword.
+     * @param keyword The string that user wants to find.
+     * @param tasks The list of tasks to display.
+     */
     public void printFoundTasks(String keyword, ArrayList<Task> tasks) {
         System.out.println("____________________\nHere are the matching tasks in your list:");
         int x = 1;
