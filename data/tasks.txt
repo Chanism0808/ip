@@ -6,8 +6,8 @@ E | 0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
 D | 1 | sleep | Dec 10 2019 08:00
 E | 0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
 D | 0 | sleep | Dec 10 2019 08:00
-T | 1 | gym
 D | 1 | sleep | Dec 10 2019 08:00
 E | 1 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
-T | 0 | gym
+T | 1 | gym
 T | 0 | return book
+T | 1 | eat now

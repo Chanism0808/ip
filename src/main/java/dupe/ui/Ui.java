@@ -3,8 +3,15 @@ package dupe.ui;
 import java.util.ArrayList;
 import dupe.tasks.Task;
 
+/**
+ * Handles user interface operations such as displaying messages
+ * to the console, showing tasks, and printing errors.
+ */
 public class Ui {
-    // Print greeting when the program starts
+
+    /**
+     * Prints a greeting message when the program starts.
+     */
     public void showGreeting() {
         System.out.println("____________________\n"
                 + "Hello! I'm Dupe\n"
@@ -12,18 +19,30 @@ public class Ui {
                 + "____________________");
     }
 
-    // Print goodbye message
+    /**
+     * Prints a goodbye message when the program exits.
+     */
     public void showExit() {
         System.out.println("____________________\n"
                 + "Goodbye! Hope to see you again soon!\n"
                 + "____________________");
     }
 
-    // Print error message
+    /**
+     * Prints an error message to the console.
+     *
+     * @param message The error message to display.
+     */
     public void showError(String message) {
         System.out.println("Error!! " + message);
     }
 
+    /**
+     * Prints a message showing that a task has been added.
+     *
+     * @param task The task that was added.
+     * @param taskCount The current number of tasks in the list.
+     */
     public void showTaskAdded(Task task, int taskCount) {
         System.out.println("____________________\n"
                 + "Got it. I've added this task:\n"
@@ -32,7 +51,11 @@ public class Ui {
                 + "\n____________________");
     }
 
-    // Print list of tasks
+    /**
+     * Prints the current list of tasks.
+     *
+     * @param tasks The list of tasks to display.
+     */
     public void showTaskList(ArrayList<Task> tasks) {
         System.out.println("____________________\nHere are the list of tasks:\n");
         for (int i = 0; i < tasks.size(); i++) {
@@ -52,21 +75,34 @@ public class Ui {
         }
     }
 
-    // Print task marked as done
+    /**
+     * Prints a message indicating that a task has been marked as done.
+     *
+     * @param task The task that was marked done.
+     */
     public void showTaskMarked(Task task) {
         System.out.println("Nice! I've marked this task as done:\n"
                 + task
                 + "\n____________________");
     }
 
-    // Print task marked as not done
+    /**
+     * Prints a message indicating that a task has been marked as not done.
+     *
+     * @param task The task that was marked not done.
+     */
     public void showTaskUnmarked(Task task) {
         System.out.println("OK, I've marked this task as not done yet:\n"
                 + task
                 + "\n____________________");
     }
 
-    // Print task deletion
+    /**
+     * Prints a message showing that a task has been deleted.
+     *
+     * @param task The task that was deleted.
+     * @param taskCount The current number of tasks remaining in the list.
+     */
     public void showTaskDeleted(Task task, int taskCount) {
         System.out.println("____________________\n"
                 + task
@@ -74,6 +110,11 @@ public class Ui {
                 + "\n____________________");
     }
 
+    /**
+     * Prints a message indicating that a list of tasks has been loaded from a file.
+     *
+     * @param tasks The list of tasks that were loaded.
+     */
     public void showListLoaded(ArrayList<Task> tasks) {
         System.out.println("____________________\n"
                 + "Loaded " + tasks.size() + " tasks from file.");
