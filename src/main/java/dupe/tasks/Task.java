@@ -10,7 +10,7 @@ public class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+        return (isDone ? "X" : " ");  // mark done task with X
     }
 
     public void markAsDone() {
@@ -21,8 +21,9 @@ public class Task {
         isDone = false;
     }
 
+    @Override
     public String toString() {
-        if(isDone){
+        if (isDone) {
             return "[X] " + description;
         }
         return "[ ] " + description;
@@ -33,10 +34,9 @@ public class Task {
     }
 
     public String savedListFormat() {
-        if(isDone){
+        if (isDone) {
             return "1 | " + description;
         }
         return "0 | " + description;
     }
-
 }
