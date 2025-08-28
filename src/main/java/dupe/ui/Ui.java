@@ -39,6 +39,17 @@ public class Ui {
         System.out.println("____________________");
     }
 
+    public void printFoundTasks(String keyword, ArrayList<Task> tasks) {
+        System.out.println("____________________\nHere are the matching tasks in your list:");
+        int x = 1;
+        for (int i = 0; i < tasks.size(); i++) {
+            if (tasks.get(i).hasString(keyword)) {
+                System.out.println(x + "." + tasks.get(i));
+                x += 1;
+            }
+        }
+    }
+
     // Print task marked as done
     public void showTaskMarked(Task task) {
         System.out.println("Nice! I've marked this task as done:\n" + task + "\n____________________");
