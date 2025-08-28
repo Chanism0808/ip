@@ -153,6 +153,16 @@ public class Dupe {
                 }
                 storage.save(tasks.getTasks(), ui);
 
+            } else if (command.equals("find")) {
+                if (argument.isEmpty()) {
+                    ui.showError("Please enter a description.");
+                } else {
+                    if (tasks.isFound(argument)) {
+                        ui.printFoundTasks(argument, tasks.getTasks());
+                    } else {
+                        ui.showError("Sorry keyword: \"" + argument + "\" not found");
+                    }
+                }
             }
             else {
                 ui.showError("\n____________________\n"
