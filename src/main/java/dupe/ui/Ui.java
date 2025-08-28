@@ -14,7 +14,9 @@ public class Ui {
 
     // Print goodbye message
     public void showExit() {
-        System.out.println("____________________\nGoodbye! Hope to see you again soon!\n____________________");
+        System.out.println("____________________\n"
+                + "Goodbye! Hope to see you again soon!\n"
+                + "____________________");
     }
 
     // Print error message
@@ -34,25 +36,31 @@ public class Ui {
     public void showTaskList(ArrayList<Task> tasks) {
         System.out.println("____________________\nHere are the list of tasks:\n");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + "." + tasks.get(i));
+            System.out.println((i + 1) + ". " + tasks.get(i));
         }
         System.out.println("____________________");
     }
 
     // Print task marked as done
     public void showTaskMarked(Task task) {
-        System.out.println("Nice! I've marked this task as done:\n" + task + "\n____________________");
+        System.out.println("Nice! I've marked this task as done:\n"
+                + task
+                + "\n____________________");
     }
 
     // Print task marked as not done
     public void showTaskUnmarked(Task task) {
-        System.out.println("OK, I've marked this task as not done yet:\n" + task + "\n____________________");
+        System.out.println("OK, I've marked this task as not done yet:\n"
+                + task
+                + "\n____________________");
     }
 
     // Print task deletion
     public void showTaskDeleted(Task task, int taskCount) {
-        System.out.println("____________________\n" + task
-                + "\nNow you have " + taskCount + " tasks in the list.\n____________________");
+        System.out.println("____________________\n"
+                + task
+                + "\nNow you have " + taskCount + " tasks in the list."
+                + "\n____________________");
     }
 
     public void showListLoaded(ArrayList<Task> tasks) {
