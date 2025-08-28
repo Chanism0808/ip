@@ -163,7 +163,7 @@ public class Dupe {
                         ui.showError("Sorry keyword: \"" + argument + "\" not found");
                     }
                 }
-            else {
+            } else {
                 ui.showError("\n____________________\n"
                         + "Invalid Command\n"
                         + "____________________");
