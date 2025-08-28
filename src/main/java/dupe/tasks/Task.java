@@ -1,38 +1,73 @@
 package dupe.tasks;
 
+/**
+ * Represents a generic task with a description and a completion status.
+ * A task can be marked as done or not done, and provides different
+ * string representations for display and saving.
+ */
 public class Task {
     protected String description;
     protected boolean isDone;
 
+    /**
+     * Creates a new task with the specified description.
+     * The task is initially marked as not done.
+     *
+     * @param description Description of the task.
+     */
     public Task(String description) {
         this.description = description;
         this.isDone = false;
     }
 
+    /**
+     * Returns the status icon of this task.
+     * "X" if the task is done, or a space if not done.
+     *
+     * @return Status icon of the task.
+     */
     public String getStatusIcon() {
         return (isDone ? "X" : " "); // mark done task with X
     }
 
+    /**
+     * Marks this task as done.
+     */
     public void markAsDone() {
         isDone = true;
     }
 
+    /**
+     * Marks this task as not done.
+     */
     public void markAsNotDone() {
         isDone = false;
     }
 
+    /**
+     * Returns a string representation of this task for display purposes.
+     * Shows the completion status followed by the description.
+     *
+     * @return String representation of the task.
+     */
+    @Override
     public String toString() {
-        if(isDone){
+        if (isDone) {
             return "[X] " + description;
         }
         return "[ ] " + description;
     }
 
+    /**
+     * Returns a string representation of this task in the save-file format.
+     * "1 | description" if done, or "0 | description" if not done.
+     *
+     * @return Save file format string for this task.
+     */
     public String savedListFormat() {
-        if(isDone){
+        if (isDone) {
             return "1 | " + description;
         }
         return "0 | " + description;
     }
-
 }
