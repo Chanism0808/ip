@@ -1,5 +1,5 @@
 E | 1 | Retreat | Oct 10 2019 10:10 | Oct 12 2019 11:11
-D | 0 | project | Sep 09 2001 09:09
+D | 1 | project | Sep 09 2001 09:09
 E | 0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
 D | 1 | sleep | Dec 10 2019 08:00
 E | 0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
@@ -9,4 +9,4 @@ D | 1 | sleep | Dec 10 2019 08:00
 E | 1 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
 T | 1 | return book
 T | 0 | eat now
-T | 1 | hello
+T | 0 | hello
