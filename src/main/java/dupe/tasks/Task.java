@@ -1,5 +1,11 @@
 package dupe.tasks;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+
+import dupe.parser.Parser;
+
 /**
  * Represents a generic task with a description and a completion status.
  * A task can be marked as done or not done, and provides different
@@ -16,6 +22,7 @@ public class Task {
      * @param description Description of the task.
      */
     public Task(String description) {
+        assert description != null : "description should not be null";
         this.description = description;
         this.isDone = false;
     }
