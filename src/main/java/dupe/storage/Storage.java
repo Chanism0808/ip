@@ -37,52 +37,75 @@ public class Storage {
      * @return A list of tasks loaded from the file.
      * @throws IOException If an error occurs while creating or reading the file.
      */
-    public ArrayList<Task> load() throws IOException {
+    public TaskList load() throws IOException {
         File file = new File(filePath);
 
-        // Ensure file exists
         if (!file.exists()) {
             file.getParentFile().mkdirs();
             file.createNewFile();
-            return new ArrayList<>();  // return empty list if no file
+            return new TaskList(); // return empty task list
         }
 
         TaskList taskList = new TaskList();
-        Scanner fileScanner = new Scanner(file);
 
-        while (fileScanner.hasNextLine()) {
-            String line = fileScanner.nextLine();
-            String[] parts = line.split(" \\| ");
-            String type = parts[0];
-
-            if (type.equals("T")) {
-                ToDo task = new ToDo(parts[2]);
-                if (parts[1].equals("1")) {
-                    task.markAsDone();
+        try (Scanner fileScanner = new Scanner(file)) {
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                Task task = parseTask(line);
+                if (task != null) {
+                    taskList.addTask(task);
                 }
-                taskList.addTask(task);
-
-            } else if (type.equals("D")) {
-                LocalDateTime dateTime = Parser.parseDateTimeFile(parts[3]);
-                Deadline task = new Deadline(parts[2], dateTime);
-                if (parts[1].equals("1")) {
-                    task.markAsDone();
-                }
-                taskList.addTask(task);
-
-            } else if (type.equals("E")) {
-                LocalDateTime dateTimeFrom = Parser.parseDateTimeFile(parts[3]);
-                LocalDateTime dateTimeTo = Parser.parseDateTimeFile(parts[4]);
-                Event task = new Event(parts[2], dateTimeFrom, dateTimeTo);
-                if (parts[1].equals("1")) {
-                    task.markAsDone();
-                }
-                taskList.addTask(task);
             }
         }
 
-        fileScanner.close();
-        return taskList.getTasks();
+        return taskList;
+    }
+
+    /**
+     * Parses a line from the save file into a Task object.
+     */
+    private Task parseTask(String line) {
+        String[] parts = line.split(" \\| ");
+        String type = parts[0];
+        String doneFlag = parts[1];
+        String description = parts[2];
+
+        Task task = null;
+
+        switch (type) {
+            case "T":
+                task = new ToDo(description);
+                break;
+
+            case "D":
+                LocalDateTime deadline = Parser.parseDateTimeFile(parts[3]);
+                task = new Deadline(description, deadline);
+                break;
+
+            case "E":
+                LocalDateTime from = Parser.parseDateTimeFile(parts[3]);
+                LocalDateTime to = Parser.parseDateTimeFile(parts[4]);
+                task = new Event(description, from, to);
+                break;
+
+            default:
+                System.err.println("Unknown task type in save file: " + type);
+        }
+
+        if (task != null) {
+            markDoneIfNeeded(task, doneFlag);
+        }
+
+        return task;
+    }
+
+    /**
+     * Marks a task as done if the save file indicates so.
+     */
+    private void markDoneIfNeeded(Task task, String doneFlag) {
+        if ("1".equals(doneFlag)) {
+            task.markAsDone();
+        }
     }
 
     /**
