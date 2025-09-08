@@ -78,8 +78,8 @@ public class Task {
      */
     public String savedListFormat() {
         if (isDone) {
-            return "["+ priority + "]" + "1 | " + description;
+            return priority + " | " + "1 | " + description;
         }
-        return "["+ priority + "]" + "0 | " + description;
+        return priority + " | " + "0 | " + description;
     }
 }

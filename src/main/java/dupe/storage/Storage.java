@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import dupe.priority.Priority;
 import dupe.tasks.Task;
 import dupe.tasks.Deadline;
 import dupe.tasks.TaskList;
@@ -68,8 +69,9 @@ public class Storage {
     private Task parseTask(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
-        String doneFlag = parts[1];
-        String description = parts[2];
+        String priority = parts[1];
+        String doneFlag = parts[2];
+        String description = parts[3];
 
         Task task = null;
 
@@ -79,13 +81,13 @@ public class Storage {
                 break;
 
             case "D":
-                LocalDateTime deadline = Parser.parseDateTimeFile(parts[3]);
+                LocalDateTime deadline = Parser.parseDateTimeFile(parts[4]);
                 task = new Deadline(description, deadline);
                 break;
 
             case "E":
-                LocalDateTime from = Parser.parseDateTimeFile(parts[3]);
-                LocalDateTime to = Parser.parseDateTimeFile(parts[4]);
+                LocalDateTime from = Parser.parseDateTimeFile(parts[4]);
+                LocalDateTime to = Parser.parseDateTimeFile(parts[5]);
                 task = new Event(description, from, to);
                 break;
 
@@ -95,6 +97,7 @@ public class Storage {
 
         if (task != null) {
             markDoneIfNeeded(task, doneFlag);
+            task.setPriority(Priority.valueOf(priority));
         }
 
         return task;

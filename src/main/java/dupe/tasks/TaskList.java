@@ -19,16 +19,6 @@ public class TaskList {
     }
 
     /**
-     * Creates a {@code TaskList} with the given list of tasks.
-     *
-     * @param tasks the initial list of tasks
-     */
-    public TaskList(ArrayList<Task> tasks) {
-        assert tasks != null : "initial tasks list should not be null";
-        this.tasks = tasks;
-    }
-
-    /**
      * Checks if the given index is valid for accessing a task in the list.
      *
      * @param taskId the index of the task (1-based)

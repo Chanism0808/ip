@@ -67,20 +67,6 @@ public class Parser {
     }
 
     /**
-     * Parses an integer from a string.
-     *
-     * @param input The string to parse.
-     * @return The integer value, or -1 if invalid.
-     */
-    public static int parseInt(String input) {
-        try {
-            return Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
-    /**
      * Checks if the given task index is valid within the provided task list.
      *
      * @param taskId The 1-based task index.
