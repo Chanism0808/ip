@@ -3,6 +3,8 @@ o	Explaining Java concepts (e.g., static methods, packages, object responsibilit
 o	Providing guidance on class design (e.g., whether TaskList should depend on Ui).
 o	Suggesting refactoring strategies (e.g., separating logic into storage, parser, ui, and tasks packages).
 o   Create JDocs comments
+o   Seek help to assist me with CheckStyle, helping me to edit and to follow desired Coding Style
+o   Seek help to assist me with CodeQuality
 
 How AI Was Used Per Increment: Increment A-MoreOOP
 Asked AI about Ui responsibilities and how to integrate them into TaskList.
