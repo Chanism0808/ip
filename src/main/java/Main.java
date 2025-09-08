@@ -11,8 +11,9 @@ import javafx.stage.Stage;
  * A GUI for Dupe using FXML.
  */
 public class Main extends Application {
+    private static final String FILE_PATH = "data/tasks.txt";
 
-    private Dupe dupe = new Dupe("data/tasks.txt");
+    private final Dupe dupe = new Dupe(FILE_PATH);
 
     @Override
     public void start(Stage stage) {
