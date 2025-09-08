@@ -21,16 +21,20 @@ public class Dupe {
     private GuiUi guiUi;
 
     public Dupe(String filePath) {
+        assert filePath != null && !filePath.trim().isEmpty()
+                : "File path must not be null or empty";
         ui = new Ui();
         storage = new Storage(filePath);
         guiUi = new GuiUi();
         try {
             tasks = storage.load();
+            assert tasks != null : "TaskList should not be null after loading";
             ui.showListLoaded(tasks.getTasks());
 
         } catch (IOException e) {
             ui.showError("Error loading file");
             tasks = new TaskList();
+            assert tasks != null : "TaskList must be initialized even after IOException";
         }
     }
 
@@ -41,8 +45,11 @@ public class Dupe {
         while (sc.hasNextLine()) {
             String input = sc.nextLine();
             String[] parsed = Parser.parse(input);
+            assert parsed.length == 2 : "Parser should always return exactly 2 parts";
             String command = parsed[0];
+            assert command != null : "Command must not be null";
             String argument = parsed[1];
+            assert argument != null : "Argument must not be null";
 
             if (command.equals("bye")) {
                 ui.showExit();
@@ -61,6 +68,8 @@ public class Dupe {
                     return;
                 }
                 int taskID = Integer.parseInt(argument);
+                assert taskID > 0 : "Task ID should be positive";
+                assert taskID <= tasks.size() : "Task ID should not exceed number of tasks";
                 if (Parser.isValidIndex(taskID, tasks.getTasks())) {
                     Task selectedTask = tasks.markTaskDone(taskID);
                     ui.showTaskMarked(selectedTask);
@@ -75,6 +84,8 @@ public class Dupe {
                     return;
                 }
                 int taskID = Integer.parseInt(argument);
+                assert taskID > 0 : "Task ID should be positive";
+                assert taskID <= tasks.size() : "Task ID should not exceed number of tasks";
                 if (Parser.isValidIndex(taskID, tasks.getTasks())) {
                     Task selectedTask = tasks.markTaskUndone(taskID);
                     ui.showTaskUnmarked(selectedTask);
@@ -118,7 +129,6 @@ public class Dupe {
                 } catch (DateTimeParseException e) {
                     ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
                 }
-
                 storage.save(tasks.getTasks(), ui);
 
             } else if (command.equals("event")) {
@@ -151,6 +161,8 @@ public class Dupe {
                 try {
                     LocalDateTime dateTimeFrom = Parser.parseDateTime(from);
                     LocalDateTime dateTimeTo = Parser.parseDateTime(to);
+                    assert dateTimeFrom.isBefore(dateTimeTo)
+                            : "Event start time must be before end time";
                     Event task = new Event(description, dateTimeFrom, dateTimeTo);
                     tasks.addTask(task);
                     ui.showTaskAdded(task, tasks.size());
@@ -203,9 +215,13 @@ public class Dupe {
      */
     public String getResponse(String input) {
         String[] parsed = Parser.parse(input);
+        assert parsed.length == 2 : "Parser should always return exactly 2 parts";
         String command = parsed[0];
+        assert command != null : "Command must not be null";
         String argument = parsed[1];
+        assert argument != null : "Argument must not be null";
         StringBuilder reply = new StringBuilder();
+
 
         if (command.equals("bye")) {
             reply.append(guiUi.showExit());
@@ -222,6 +238,8 @@ public class Dupe {
                 reply.append(guiUi.showError("Please enter a task number."));
             } else {
                 int taskID = Integer.parseInt(argument);
+                assert taskID > 0 : "Task ID should be positive";
+                assert taskID <= tasks.size() : "Task ID should not exceed number of tasks";
                 if (Parser.isValidIndex(taskID, tasks.getTasks())) {
                     Task selectedTask = tasks.markTaskDone(taskID);
                     reply.append(guiUi.showTaskMarked(selectedTask));
@@ -236,6 +254,8 @@ public class Dupe {
                 reply.append(guiUi.showError("Please enter a task number."));
             } else {
                 int taskID = Integer.parseInt(argument);
+                assert taskID > 0 : "Task ID should be positive";
+                assert taskID <= tasks.size() : "Task ID should not exceed number of tasks";
                 if (Parser.isValidIndex(taskID, tasks.getTasks())) {
                     Task selectedTask = tasks.markTaskUndone(taskID);
                     reply.append(guiUi.showTaskUnmarked(selectedTask));
@@ -319,6 +339,8 @@ public class Dupe {
             try {
                 LocalDateTime dateTimeFrom = Parser.parseDateTime(from);
                 LocalDateTime dateTimeTo = Parser.parseDateTime(to);
+                assert dateTimeFrom.isBefore(dateTimeTo)
+                        : "Event start time must be before end time";
                 Event task = new Event(description, dateTimeFrom, dateTimeTo);
                 tasks.addTask(task);
                 reply.append(guiUi.showTaskAdded(task, tasks.size()));

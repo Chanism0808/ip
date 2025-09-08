@@ -14,6 +14,7 @@ public class TaskList {
      */
     public TaskList() {
         tasks = new ArrayList<>();
+        assert tasks != null : "tasks list should be initialized";
     }
 
     /**
@@ -22,6 +23,7 @@ public class TaskList {
      * @param tasks the initial list of tasks
      */
     public TaskList(ArrayList<Task> tasks) {
+        assert tasks != null : "initial tasks list should not be null";
         this.tasks = tasks;
     }
 
@@ -43,8 +45,10 @@ public class TaskList {
      * @throws IllegalArgumentException if the index is invalid
      */
     public Task markTaskDone(int option) {
+        assert option > 0 : "task index must be positive";
         if (isValidIndex(option)) {
             Task selectedTask = tasks.get(option - 1);
+            assert selectedTask != null : "task should exist at valid index";
             selectedTask.markAsDone();
             return selectedTask;
         }
@@ -59,8 +63,10 @@ public class TaskList {
      * @throws IllegalArgumentException if the index is invalid
      */
     public Task markTaskUndone(int option) {
+        assert option > 0 : "task index must be positive";
         if (isValidIndex(option)) {
             Task selectedTask = tasks.get(option - 1);
+            assert selectedTask != null : "task should exist at valid index";
             selectedTask.markAsNotDone();
             return selectedTask;
         }
@@ -73,7 +79,9 @@ public class TaskList {
      * @param task the task to add
      */
     public void addTask(Task task) {
+        assert task != null : "task should not be null";
         tasks.add(task);
+        assert tasks.contains(task) : "task should be in the list after adding";
     }
 
     /**
@@ -84,8 +92,11 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if the index is invalid
      */
     public Task deleteTask(int option) {
+        assert option > 0 && option <= tasks.size()
+                : "delete index must be within bounds";
         Task selectedTask = tasks.get(option - 1);
         tasks.remove(selectedTask);
+        assert !tasks.contains(selectedTask) : "task should be removed from list";
         return selectedTask;
     }
 
@@ -95,6 +106,7 @@ public class TaskList {
      * @return {@code true} if the keyword exists in the list of task, {@code false} otherwise.
      */
     public boolean isFound(String keyword) {
+        assert keyword != null && !keyword.isEmpty() : "search keyword should not be null/empty";
         for (Task task : tasks) {
             if (task.hasString(keyword)) {
                 return true;
@@ -127,6 +139,7 @@ public class TaskList {
      * @return the size of the task list
      */
     public int size() {
+        assert tasks.size() >= 0 : "task list size should never be negative";
         return tasks.size();
     }
 }
