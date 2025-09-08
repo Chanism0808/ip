@@ -1,6 +1,7 @@
 package dupe.tasks;
 
 import java.util.ArrayList;
+import dupe.priority.Priority;
 
 /**
  * Represents a list of {@link Task} objects and provides operations
@@ -116,11 +117,36 @@ public class TaskList {
     }
 
     /**
+     * Sets the priority of a task in the task list.
+     *
+     * @param taskId   the 1-based index of the task in the list
+     * @param priority the {@link Priority} level to assign to the task
+     * @throws IndexOutOfBoundsException if the taskId is out of range
+     */
+    public void setTaskPriority(int taskId, Priority priority) {
+        Task task = tasks.get(taskId - 1);
+        task.setPriority(priority);
+    }
+
+    /**
+     * Retrieves a task from the task list.
+     *
+     * @param taskId the 1-based index of the task in the list
+     * @return the {@link Task} at the specified position
+     * @throws IndexOutOfBoundsException if the taskId is out of range
+     */
+    public Task getTask(int taskId) {
+        Task task = tasks.get(taskId - 1);
+        return task;
+    }
+
+
+    /**
      * Returns a defensive copy of the list of tasks.
      *
      * @return a copy of the task list
      */
-    public ArrayList<Task> getTasks() {
+    public ArrayList<Task> getTaskList() {
         return new ArrayList<>(tasks); // defensive copy
     }
 

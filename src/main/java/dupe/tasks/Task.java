@@ -1,10 +1,6 @@
 package dupe.tasks;
 
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
-
-import dupe.parser.Parser;
+import dupe.priority.Priority;
 
 /**
  * Represents a generic task with a description and a completion status.
@@ -12,8 +8,9 @@ import dupe.parser.Parser;
  * string representations for display and saving.
  */
 public class Task {
-    protected String description;
-    protected boolean isDone;
+    private final String description;
+    private boolean isDone;
+    private Priority priority;
 
     /**
      * Creates a new task with the specified description.
@@ -25,16 +22,7 @@ public class Task {
         assert description != null : "description should not be null";
         this.description = description;
         this.isDone = false;
-    }
-
-    /**
-     * Returns the status icon of this task.
-     * "X" if the task is done, or a space if not done.
-     *
-     * @return Status icon of the task.
-     */
-    public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+        this.priority = Priority.MEDIUM; //default
     }
 
     /**
@@ -51,12 +39,26 @@ public class Task {
         isDone = false;
     }
 
+    /**
+     * Set the priority of the task.
+     *
+     * @param priority Priority of the task.
+     */
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
+
+    public Priority getPriority() {
+        assert priority != null : "priority should not be null";
+        return this.priority;
+    }
+
     @Override
     public String toString() {
         if (isDone) {
-            return "[X] " + description;
+            return "["+ priority + "]" + "[X] " + description;
         }
-        return "[ ] " + description;
+        return "["+ priority + "]" + "[ ] " + description;
     }
 
     /**
@@ -76,8 +78,8 @@ public class Task {
      */
     public String savedListFormat() {
         if (isDone) {
-            return "1 | " + description;
+            return "["+ priority + "]" + "1 | " + description;
         }
-        return "0 | " + description;
+        return "["+ priority + "]" + "0 | " + description;
     }
 }

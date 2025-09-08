@@ -102,6 +102,12 @@ public class Ui {
                 + "\n____________________");
     }
 
+    public void showPrioritySet(Task task) {
+        System.out.println("OK, I've set this task as [" + task.getPriority() + "]:\n"
+                + task
+                + "\n____________________");
+    }
+
     /**
      * Prints a message showing that a task has been deleted.
      *

@@ -86,4 +86,15 @@ public class GuiUi {
         return "____________________\n"
                 + "Loaded " + tasks.size() + " tasks from file.";
     }
+
+    /**
+     * Displays a confirmation message when the priority of a task is set.
+     *
+     * @param task the {@link Task} whose priority was updated
+     */
+    public String showPrioritySet(Task task) {
+        return "OK, I've set this task as [" + task.getPriority() + "]:\n"
+                + task
+                + "\n____________________";
+    }
 }

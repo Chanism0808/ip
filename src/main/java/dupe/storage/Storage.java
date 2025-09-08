@@ -13,6 +13,7 @@ import dupe.tasks.TaskList;
 import dupe.tasks.ToDo;
 import dupe.tasks.Event;
 import dupe.parser.Parser;
+import dupe.ui.GuiUi;
 import dupe.ui.Ui;
 
 /**
@@ -133,6 +134,34 @@ public class Storage {
 
         } catch (IOException e) {
             ui.showError("An error occurred while saving tasks: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Saves the given tasks to the save file.
+     * If the file does not exist, a new file is created.
+     *
+     * @param tasks The list of tasks to be saved.
+     * @param guiUi    The {@code GUiUi} instance used to display error messages if saving fails.
+     */
+    public void save(ArrayList<Task> tasks, GuiUi guiUi) {
+        File file = new File(filePath);
+
+        try {
+            if (!file.exists()) {
+                file.getParentFile().mkdirs();  // create directories if needed
+                file.createNewFile();
+                guiUi.showError("File not found. Created new file at: " + filePath);
+            }
+
+            FileWriter fw = new FileWriter(file);  // overwrite file
+            for (Task task : tasks) {
+                fw.write(task.savedListFormat() + "\n");
+            }
+            fw.close();
+
+        } catch (IOException e) {
+            guiUi.showError("An error occurred while saving tasks: " + e.getMessage());
         }
     }
 }

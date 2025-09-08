@@ -1,13 +1,14 @@
-E | 1 | Retreat | Oct 10 2019 10:10 | Oct 12 2019 11:11
-D | 1 | project | Sep 09 2001 09:09
-E | 0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
-D | 1 | sleep | Dec 10 2019 08:00
-E | 0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
-D | 0 | sleep | Dec 10 2019 08:00
-T | 1 | gym
-D | 1 | sleep | Dec 10 2019 08:00
-E | 0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
-T | 1 | return book
-T | 0 | eat now
-T | 1 | hello
-D | 0 | lunch | Aug 08 2001 08:00
+E | [MEDIUM]0 | Retreat | Oct 10 2019 10:10 | Oct 12 2019 11:11
+D | [MEDIUM]0 | project | Sep 09 2001 09:09
+E | [MEDIUM]0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
+D | [MEDIUM]0 | sleep | Dec 10 2019 08:00
+E | [MEDIUM]0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
+D | [MEDIUM]0 | sleep | Dec 10 2019 08:00
+T | [MEDIUM]0 | gym
+D | [MEDIUM]0 | sleep | Dec 10 2019 08:00
+E | [MEDIUM]0 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
+T | [MEDIUM]0 | return book
+T | [MEDIUM]0 | eat now
+T | [MEDIUM]0 | hello
+D | [MEDIUM]0 | lunch | Aug 08 2001 08:00
+T | [MEDIUM]1 | hello

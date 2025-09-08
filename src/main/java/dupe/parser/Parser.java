@@ -21,7 +21,7 @@ public class Parser {
      * @return An array of two strings: { command, argument }.
      */
     public static String[] parse(String input) {
-        String[] parts = input.split(" ", 2);
+        String[] parts = input.trim().split(" ", 2);
         String command = parts[0];
         String argument = parts.length > 1 ? parts[1] : "";
         return new String[] { command, argument };
