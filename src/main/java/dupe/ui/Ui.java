@@ -102,6 +102,11 @@ public class Ui {
                 + "\n____________________");
     }
 
+    /**
+     * Prints a confirmation message when the priority of a task is set.
+     *
+     * @param task the {@link Task} whose priority was updated
+     */
     public void showPrioritySet(Task task) {
         System.out.println("OK, I've set this task as [" + task.getPriority() + "]:\n"
                 + task
