@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
  * and provides string representations for display and saving.
  */
 public class Deadline extends Task {
-    private LocalDateTime deadline;
+    private final LocalDateTime deadline;
 
     /**
      * Creates a new deadline task with the given description and due date/time.
