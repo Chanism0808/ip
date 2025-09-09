@@ -5,6 +5,9 @@ o	Suggesting refactoring strategies (e.g., separating logic into storage, parser
 o   Create JDocs comments
 o   Seek help to assist me with CheckStyle, helping me to edit and to follow desired Coding Style
 o   Seek help to assist me with CodeQuality
+o   Refactoring suggestions (e.g., extracting helper methods, separating CLI and GUI logic).
+o   Explanations of programming concepts (e.g., inheritance vs composition, handling different UI classes).
+o   Brainstorming design alternatives (e.g., using a Commands class, functional interfaces).
 
 How AI Was Used Per Increment: Increment A-MoreOOP
 Asked AI about Ui responsibilities and how to integrate them into TaskList.
