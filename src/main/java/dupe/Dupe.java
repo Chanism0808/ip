@@ -16,225 +16,22 @@ import dupe.tasks.Event;
 import dupe.priority.Priority;
 
 public class Dupe {
-    private Storage storage;
+    private final Storage storage;
     private TaskList tasks;
-    private Ui ui;
-    private GuiUi guiUi;
+    private final GuiUi guiUi;
 
     public Dupe(String filePath) {
         assert filePath != null && !filePath.trim().isEmpty()
                 : "File path must not be null or empty";
-        ui = new Ui();
         storage = new Storage(filePath);
         guiUi = new GuiUi();
         try {
             tasks = storage.load();
             assert tasks != null : "TaskList should not be null after loading";
-            ui.showListLoaded(tasks.getTaskList());
-
         } catch (IOException e) {
-            ui.showError("Error loading file");
             tasks = new TaskList();
             assert tasks != null : "TaskList must be initialized even after IOException";
         }
-    }
-
-    public void run() {
-        ui.showGreeting();
-
-        Scanner sc = new Scanner(System.in);
-        while (sc.hasNextLine()) {
-            String input = sc.nextLine();
-            String[] parsed = Parser.parse(input);
-            assert parsed.length == 2 : "Parser should always return exactly 2 parts";
-            String command = parsed[0];
-            assert command != null : "Command must not be null";
-            String argument = parsed[1];
-            assert argument != null : "Argument must not be null";
-
-            if (command.equals("bye")) {
-                ui.showExit();
-                break;
-
-            } else if (command.equals("list")) {
-                if (tasks.isEmpty()) {
-                    ui.showError("You have no tasks in your list.");
-                } else {
-                    ui.showTaskList(tasks.getTaskList());
-                }
-
-            } else if (command.equals("setPriority")) {
-                if (argument.isEmpty()) {
-                    ui.showError("Please enter a task number followed by the priority [LOW, MEDIUM, HIGH]. ");
-                    return;
-                }
-                String[] subparts = Parser.parse(argument);
-                int taskId = Integer.parseInt(subparts[0]);
-                Task task = tasks.getTask(taskId - 1);
-                Priority priority;
-
-                if(!Parser.isValidIndex(taskId, tasks.getTaskList())) {
-                    ui.showError("Please enter a valid task ID");
-                    return;
-                }
-
-                try {
-                    priority = Priority.valueOf(subparts[1].toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    ui.showError("Invalid priority. Use LOW, MEDIUM, or HIGH.");
-                    return;
-                }
-                tasks.setTaskPriority(taskId, priority);
-                ui.showPrioritySet(task);
-
-                storage.save(tasks.getTaskList(), ui);
-
-            } else if (command.equals("mark")) {
-                if (argument.isEmpty()) {
-                    ui.showError("Please enter a task number.");
-                    return;
-                }
-                int taskId = Integer.parseInt(argument);
-                assert taskId > 0 : "Task ID should be positive";
-                assert taskId <= tasks.size() : "Task ID should not exceed number of tasks";
-                if (Parser.isValidIndex(taskId, tasks.getTaskList())) {
-                    Task selectedTask = tasks.markTaskDone(taskId);
-                    ui.showTaskMarked(selectedTask);
-                } else {
-                    ui.showError("Please enter a valid task ID");
-                }
-                storage.save(tasks.getTaskList(), ui);
-
-            } else if (command.equals("unmark")) {
-                if (argument.isEmpty()) {
-                    ui.showError("Please enter a task number.");
-                    return;
-                }
-                int taskId = Integer.parseInt(argument);
-                assert taskId > 0 : "Task ID should be positive";
-                assert taskId <= tasks.size() : "Task ID should not exceed number of tasks";
-                if (Parser.isValidIndex(taskId, tasks.getTaskList())) {
-                    Task selectedTask = tasks.markTaskUndone(taskId);
-                    ui.showTaskUnmarked(selectedTask);
-                } else {
-                    ui.showError("Please enter a valid task ID");
-                }
-                storage.save(tasks.getTaskList(), ui);
-
-            } else if (command.equals("todo")) {
-                if (argument.isEmpty()) {
-                    ui.showError("Please enter description.");
-                } else {
-                    ToDo task = new ToDo(argument);
-                    tasks.addTask(task);
-                    ui.showTaskAdded(task, tasks.size());
-                }
-                storage.save(tasks.getTaskList(), ui);
-
-            } else if (command.equals("deadline")) {
-                if (argument.isEmpty()) {
-                    ui.showError("Please enter description.");
-                    storage.save(tasks.getTaskList(), ui);
-                    return;
-                }
-
-                String[] subparts = Parser.parseBy(argument);
-                String description = subparts[0];
-                String deadline = subparts[1];
-
-                if (deadline.isEmpty()) {
-                    ui.showError("Please enter a valid deadline for the task | Format: deadline description /by deadline.");
-                    storage.save(tasks.getTaskList(), ui);
-                    return;
-                }
-
-                try {
-                    LocalDateTime dateTime = Parser.parseDateTime(deadline);
-                    Deadline task = new Deadline(description, dateTime);
-                    tasks.addTask(task);
-                    ui.showTaskAdded(task, tasks.size());
-                } catch (DateTimeParseException e) {
-                    ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
-                }
-                storage.save(tasks.getTaskList(), ui);
-
-            } else if (command.equals("event")) {
-                if (argument.isEmpty()) {
-                    ui.showError("Please enter description.");
-                    storage.save(tasks.getTaskList(), ui);
-                    return;
-                }
-
-                String[] subparts = Parser.parseFrom(argument);
-                String description = subparts[0];
-                String dateTime = subparts[1];
-
-                if (dateTime.isEmpty()) {
-                    ui.showError("Please enter a valid datetime for the task | Format: event description /from datetime /to datetime.");
-                    storage.save(tasks.getTaskList(), ui);
-                    return;
-                }
-
-                String[] subDateTime = Parser.parseTo(dateTime);
-                String from = subDateTime[0];
-                String to = subDateTime[1];
-
-                if (to.isEmpty()) {
-                    ui.showError("Please enter both start and end datetime | Format: event description /from datetime /to datetime.");
-                    storage.save(tasks.getTaskList(), ui);
-                    return;
-                }
-
-                try {
-                    LocalDateTime dateTimeFrom = Parser.parseDateTime(from);
-                    LocalDateTime dateTimeTo = Parser.parseDateTime(to);
-                    assert dateTimeFrom.isBefore(dateTimeTo)
-                            : "Event start time must be before end time";
-                    Event task = new Event(description, dateTimeFrom, dateTimeTo);
-                    tasks.addTask(task);
-                    ui.showTaskAdded(task, tasks.size());
-                } catch (DateTimeParseException e) {
-                    ui.showError("Invalid date format. Please use dd-MM-yyyy HH:mm");
-                }
-
-                storage.save(tasks.getTaskList(), ui);
-
-            } else if (command.equals("delete")) {
-                if (argument.isEmpty()) {
-                    ui.showError("Please enter a task number.");
-                    return;
-                }
-                int taskID = Integer.parseInt(argument);
-                if (Parser.isValidIndex(taskID, tasks.getTaskList())) {
-                    Task deleteTask = tasks.deleteTask(taskID);
-                    ui.showTaskDeleted(deleteTask, tasks.size());
-                } else {
-                    ui.showError("Please enter a valid task ID");
-                }
-
-                storage.save(tasks.getTaskList(), ui);
-
-            } else if (command.equals("find")) {
-                if (argument.isEmpty()) {
-                    ui.showError("Please enter a description.");
-                    return;
-                }
-                if (tasks.isFound(argument)) {
-                    ui.printFoundTasks(argument, tasks.getTaskList());
-                } else {
-                    ui.showError("Sorry keyword: \"" + argument + "\" not found");
-                }
-
-            } else {
-                ui.showError("\n____________________\n"
-                        + "Invalid Command\n"
-                        + "____________________");
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        new Dupe("data/tasks.txt").run();
     }
 
     /**
@@ -448,7 +245,7 @@ public class Dupe {
             reply.append(guiUi.showListLoaded(tasks.getTaskList()));
 
         } catch (IOException e) {
-            ui.showError("Error loading file");
+            guiUi.showError("Error loading file");
             reply.append((guiUi.showError("Error loading file")));
             tasks = new TaskList();
         }
