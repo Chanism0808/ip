@@ -9,8 +9,8 @@ import java.time.format.DateTimeFormatter;
  * Inherits from {@link Task}.
  */
 public class Event extends Task {
-    private LocalDateTime from;
-    private LocalDateTime to;
+    private final LocalDateTime from;
+    private final LocalDateTime to;
 
     /**
      * Creates a new Event with the given description,
