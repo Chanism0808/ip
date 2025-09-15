@@ -22,6 +22,7 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
+            stage.setTitle("Dupe");
             fxmlLoader.<MainWindow>getController().setDupe(dupe);  // inject the Dupe instance
             stage.show();
         } catch (IOException e) {
