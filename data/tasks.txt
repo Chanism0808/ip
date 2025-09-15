@@ -8,8 +8,6 @@ D | MEDIUM | 0 | sleep | Dec 10 2019 08:00
 E | MEDIUM | 1 | good food | Oct 10 2001 09:10 | Oct 10 2001 10:00
 T | MEDIUM | 0 | return book
 D | MEDIUM | 0 | lunch | Aug 08 2001 08:00
-T | MEDIUM | 0 | hello
-T | HIGH | 1 | hello
-T | HIGH | 0 | test
+T | HIGH | 0 | hello
 D | MEDIUM | 0 | go home | Aug 08 2001 07:08
 E | MEDIUM | 0 | zouk | Feb 03 2001 09:00 | Dec 20 2022 08:00
