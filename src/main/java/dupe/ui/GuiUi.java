@@ -24,6 +24,14 @@ public class GuiUi {
      * Return a goodbye message when the program exits.
      */
     public String showExit() {
+        new Thread(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+
+            }
+            javafx.application.Platform.exit();
+        }).start();
         return "____________________\n"
                 + "Goodbye! Hope to see you again soon!\n"
                 + "____________________";
