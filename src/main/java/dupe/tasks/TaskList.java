@@ -98,8 +98,9 @@ public class TaskList {
      */
     public boolean isFound(String keyword) {
         assert keyword != null && !keyword.isEmpty() : "search keyword should not be null/empty";
+        String lowerKeyword = keyword.toLowerCase();
         for (Task task : tasks) {
-            if (task.hasString(keyword)) {
+            if (task.hasString(lowerKeyword)) {
                 return true;
             }
         }

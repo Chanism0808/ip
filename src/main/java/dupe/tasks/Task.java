@@ -67,7 +67,7 @@ public class Task {
      * @return {@code true} if the description contains the given string, {@code false} otherwise.
      */
     public boolean hasString(String string) {
-        return description.contains(string);
+        return this.description.toLowerCase().contains(string.toLowerCase());
     }
 
     /**
