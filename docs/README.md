@@ -61,6 +61,12 @@ Format: `unmark (index)`
 * The `index` must be from `1` to `total number of task` shown in the task list.
   <br><br>
 
+### Find tasks by keyword: `find`
+Finds task from the task list that contains the specified keyword in the task description.
+Format: `find (keyword)`
+* The search is case-sensitive. 
+* The `keyword` must be in the task description.
+
 ### Set priority of a task: `setPriority`
 Unmark a specific task from the task list based on the index.
 Format: `setPriority (priority) (index)`
