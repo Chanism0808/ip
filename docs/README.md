@@ -17,8 +17,8 @@ Format: `todo (description)`
 
 Example:
 * `todo homework`
-
 <br><br>
+
 #### Adding a `deadline` task
 Format: `deadline (description) /by (datetime)`
 * The `datetime` follows: `dd-MM-yyyy HH:mm` format
@@ -26,15 +26,15 @@ Format: `deadline (description) /by (datetime)`
 
 Example:
 * `deadline assignment /by 10-09-2025 23:59`
-
 <br><br>
+
 #### Adding a `event` task
 Format: `event (description) /from (datetime) /to (deadtime)`
 * The `datetime` follows: `dd-MM-yyyy HH:mm` format
 * e.g. `08-08-2001 09:10`
 
 
-  Example:
+Example:
 * `event orientation camp /from 01-10-2025 10:00 /to 05-10-2025 12:00`
   <br><br>
 
@@ -66,6 +66,7 @@ Finds task from the task list that contains the specified keyword in the task de
 Format: `find (keyword)`
 * The search is case-sensitive. 
 * The `keyword` must be in the task description.
+<br><br>
 
 ### Set priority of a task: `setPriority`
 Unmark a specific task from the task list based on the index.
